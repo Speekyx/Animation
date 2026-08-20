@@ -2,11 +2,10 @@
   "project": {
     "name": "Alpine Dawn — AI Voice Hero Background",
     "slug": "microphone-cinematic-animation",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "format": "cinematic-scene-json",
-    "description": "Ultra-premium photorealistic hero background for a modern AI voice application: an alpine valley at sunrise with a mirror-calm lake, drifting morning mist and volumetric sunlight, fronted by a razor-sharp matte-black studio condenser microphone and a glowing cyan voice waveform. Graded and moved like a high-end commercial film — indistinguishable from live-action footage.",
+    "description": "Photorealistic cinematic video background that reads as real camera footage from a luxury technology commercial: a genuine alpine lake at first light, thin fog drifting over mirror-calm water, layered mountains in natural haze, and a real-world premium studio microphone anchoring the foreground while an extremely subtle cyan-blue voice waveform breathes around it.",
     "usage": "application_hero_background",
-    "realism_target": "indistinguishable from real footage; commercial-shot tier, never an illustration or 3D demo",
     "duration_seconds": 10.0,
     "frame_rate_fps": 60,
     "total_frames": 600,
@@ -14,81 +13,95 @@
     "aspect_ratio": "16:9",
     "loop": {
       "seamless": true,
-      "strategy": "Every animated parameter is periodic with a period dividing exactly into 10 s (temporal frequencies are integer multiples of 0.1 Hz); particles travel closed orbital paths; film grain and all post effects cycle with the loop, so frame 600 is bit-identical to frame 0.",
-      "loop_point_visibility": "invisible"
+      "strategy": "Every animated parameter is periodic with a period dividing exactly into 10 s (temporal frequencies are integer multiples of 0.1 Hz); particles travel closed orbital paths; grain and all post effects cycle with the loop, so frame 600 is bit-identical to frame 0.",
+      "loop_point_visibility": "invisible",
+      "perceived_repetition": "phase offsets are spread so that no sub-interval of the loop visibly repeats or mirrors itself — the full 10 s period is the only exact repetition"
     }
   },
 
+  "authenticity": {
+    "mandate": "The result must be indistinguishable from footage captured on a professional cinema camera in a real location. The viewer should immediately believe this was filmed, not made.",
+    "target_look": "luxury technology commercial filmed in the Alps — flagship product-film cinematography crossed with high-end nature-documentary photography; a frame extracted from a $500,000 commercial",
+    "photographic_cues": [
+      "true optical depth of field with distance-graded softness, never a uniform blur pass",
+      "natural sensor response: fine photochemical-style grain, soft highlight rolloff, no clipped whites",
+      "real-world surface imperfection everywhere: micro-scratches, dust, uneven rock, irregular treelines",
+      "asymmetric, irregular landscape forms — nothing procedurally repeated or mirrored",
+      "atmospheric depth built from genuine aerial perspective, not gradient overlays"
+    ],
+    "prohibited_look": [
+      "illustration", "stylized 3D", "CGI appearance", "low-poly or geometric mountains",
+      "vector graphics", "cartoon look", "artificial gradients", "fake sun", "fake reflections",
+      "simplistic microphone", "game-engine aesthetic", "excessive bloom", "excessive neon",
+      "flat lighting", "symmetrical artificial landscape", "generic stock footage", "UI-looking waveform"
+    ]
+  },
+
   "scene": {
-    "title": "Alpine lake at sunrise",
-    "location": "High-altitude alpine valley with a crystal-clear glacial lake",
-    "time_of_day": "sunrise",
+    "title": "Alpine lake at first light",
+    "location": "Real high-altitude alpine valley; the camera stands at the edge of a perfectly calm mountain lake",
+    "time_of_day": "first minutes after sunrise",
     "season": "late_summer",
-    "mood": ["luxurious", "minimal", "calm", "premium", "focused"],
-    "art_direction": {
-      "style_references": ["flagship product launch films", "cinema-grade brand commercials", "prestige streaming title sequences"],
-      "note": "Style inspiration only — no logos, branding or recognizable trade dress appears anywhere in frame.",
-      "principle": "Nothing in the scene may distract from interface content overlaid on top of it."
-    },
+    "mood": ["calm", "peaceful", "sophisticated", "premium", "intentional"],
     "composition": {
       "horizon_line_normalized_y": 0.611,
-      "subject_anchor": "center",
-      "rule": "Symmetric center composition; the microphone sits on the vertical centerline, the sun sits right of center (x ≈ 0.62) to break symmetry gently.",
-      "negative_space": "Upper sky and lower lake surface stay visually quiet so app content overlays legibly."
+      "subject_anchor": "center, slightly below the middle of the frame",
+      "rule": "The microphone is the visual anchor on the vertical centerline; the sun sits right of center (x ≈ 0.62); the landscape is naturally irregular, never symmetric.",
+      "negative_space": "Upper sky and lower lake surface stay visually quiet so interface content overlays legibly."
     }
   },
 
   "environment": {
     "atmosphere": {
-      "clarity": "crisp mountain air",
+      "clarity": "crisp mountain air with soft natural haze",
       "haze_density": 0.12,
       "atmospheric_perspective": {
         "enabled": true,
-        "model": "physically based aerial perspective — each mountain layer loses contrast and saturation and lifts toward the sky color with distance",
+        "model": "physically based aerial perspective — each mountain layer loses contrast and saturation and lifts toward sky tone with distance, exactly as a long lens records it",
         "layers": 3
       },
-      "mist": {
+      "fog": {
         "presence": true,
+        "form": "thin layer of morning fog moving slowly across the lake surface, with ragged natural edges",
         "volumes": 3,
         "altitude_band_normalized_y": [0.48, 0.6],
         "opacity_range": [0.06, 0.2],
-        "behavior": "thin morning mist floating naturally — very slow horizontal drift with gentle density breathing",
-        "interaction": "sunlight scatters through the mist volumes, producing soft volumetric shafts"
+        "behavior": "very slow horizontal drift with gentle density breathing; sunlight passes through it, producing subtle volumetric light"
       },
-      "airborne_dust": {
+      "airborne_particles": {
         "enabled": true,
-        "density": "sparse",
+        "density": "sparse — tiny atmospheric motes",
         "particle_size_mm": [0.2, 0.8],
-        "visibility": "only where light shafts catch the particles",
-        "motion": "closed Lissajous micro-orbits at integer loop frequencies, drift speed under 2 cm/s"
+        "visibility": "only where low sunlight catches them",
+        "motion": "closed micro-orbits at integer loop frequencies, drift under 2 cm/s"
       }
     },
     "sky": {
-      "type": "vertical_gradient",
+      "condition": "clear dawn sky with natural luminance falloff",
       "colors": { "zenith": "#16233f", "mid": "#4c6a9c", "horizon": "#f4c98a" },
       "clouds": {
         "coverage": 0.08,
-        "type": "high thin cirrus",
+        "type": "high thin cirrus with irregular, wind-torn structure",
         "motion": "extremely slow sinusoidal drift (±0.4% frame width at 0.1 Hz) so the loop point stays invisible"
       }
     },
     "sun": {
       "position_normalized": { "x": 0.62, "y": 0.435 },
+      "state": "low on the horizon, just clearing the far ridge, naturally diffused by mist — a real photographed sun, soft-edged, never a painted disc",
       "core_color": "#ffe9c4",
-      "glow_color": "#f2b370",
-      "state": "just clearing the far ridge, diffused by atmosphere"
+      "glow_color": "#f2b370"
     },
     "water": {
-      "body": "glacial lake",
+      "body": "glacial mountain lake",
       "surface_normalized_y_range": [0.611, 1.0],
-      "state": "mirror calm",
-      "ripple_amplitude_cm": [1, 2],
-      "reflections": "crystal-clear mirror of mountains, sky, sun and trees, broken only by capillary ripples and sparse specular glints"
+      "state": "perfectly calm",
+      "ripple_amplitude_cm": [0.5, 2],
+      "reflections": "physically realistic mirror of mountains, sky, sun and trees, carrying tiny natural distortions from extremely subtle water movement — never a perfect flip"
     },
     "wind": {
-      "speed_mps": 1.2,
+      "speed_mps": 1.0,
       "gustiness": 0.15,
-      "affects": ["pine_forest", "mist_volumes", "water_surface", "airborne_dust"]
+      "affects": ["distant_pines", "foreground_vegetation", "fog_layer", "water_surface", "airborne_particles"]
     }
   },
 
@@ -98,7 +111,7 @@
         "id": "far_range",
         "distance_km": 9,
         "depth_normalized_y": 0.4,
-        "detail": "jagged snow-capped granite ridgeline, golden rim light on sun-facing slopes",
+        "detail": "huge irregular ridgeline with natural rock formations, couloirs and snow patches following real accumulation logic; golden rim light on sun-facing slopes",
         "material_ref": "snow_granite",
         "aerial_perspective_strength": 0.55,
         "defocus_blur_px_at_4k": 6
@@ -107,7 +120,7 @@
         "id": "mid_range",
         "distance_km": 5,
         "depth_normalized_y": 0.5,
-        "detail": "softer overlapping ridges with patchy snow",
+        "detail": "overlapping shoulders with scree fields, patchy snow and thinning vegetation at altitude",
         "material_ref": "alpine_rock",
         "aerial_perspective_strength": 0.35,
         "defocus_blur_px_at_4k": 3
@@ -116,7 +129,7 @@
         "id": "near_hills",
         "distance_km": 2.5,
         "depth_normalized_y": 0.585,
-        "detail": "low forested shoreline hills",
+        "detail": "low forested shoreline hills with an uneven, natural treeline",
         "material_ref": "forested_hillside",
         "aerial_perspective_strength": 0.15,
         "defocus_blur_px_at_4k": 1.5
@@ -125,75 +138,89 @@
     "lake": {
       "id": "glacial_lake",
       "material_ref": "lake_water",
-      "shoreline": "quiet gravel edges hidden below frame",
-      "features": ["mirror reflections", "sun light column", "sparse specular glints"]
+      "shoreline": "natural gravel and stone at the camera position, mostly hidden below frame",
+      "features": ["mirror reflections with micro-distortion", "sun light column", "sparse specular glints"]
     },
-    "pine_forest": {
+    "distant_pines": {
       "id": "shoreline_conifers",
-      "species": "alpine spruce silhouettes against the dawn",
+      "species": "alpine spruce and pine, mixed ages and heights",
       "clusters": [
         { "position_normalized_x": 0.06, "count": 4, "height_normalized_range": [0.08, 0.13] },
         { "position_normalized_x": 0.92, "count": 3, "height_normalized_range": [0.09, 0.14] }
       ],
-      "detail": "extremely detailed — individual needle clusters and branch tiers resolve at 4K",
+      "detail": "individually irregular silhouettes — broken branches, uneven tiers, no two alike",
       "material_ref": "pine_foliage",
-      "motion": "almost imperceptible wind sway, max ±0.5° at the tip, per-tree phase offsets",
+      "motion": "very gentle morning-wind sway, max ±0.5° at the tip, per-tree phase offsets",
       "reflection_in_lake": true
     },
-    "mist_volumes": {
-      "id": "morning_mist",
-      "count": 3,
-      "placement": "valley floor between mid_range and near_hills, hugging the water",
-      "material_ref": "volumetric_mist"
+    "foreground_vegetation": {
+      "id": "shoreline_grasses",
+      "form": "sparse alpine grasses and low sedge at the lower frame corners, softly out of focus",
+      "material_ref": "alpine_grass",
+      "motion": "occasional slight movement in the breeze — intermittent, never continuous",
+      "prominence": "peripheral only; must not compete with the microphone"
     },
-    "dust_particles": {
-      "id": "sunlit_dust",
-      "count": 240,
-      "region": "air inside the god rays and around the microphone",
+    "fog_layer": {
+      "id": "morning_fog",
+      "count": 3,
+      "placement": "hugging the lake surface between mid_range and near_hills",
+      "material_ref": "volumetric_fog"
+    },
+    "atmospheric_particles": {
+      "id": "sunlit_motes",
+      "count": 180,
+      "region": "air within the volumetric light and around the microphone",
       "material_ref": "dust_mote",
       "loop_safe_paths": true
     },
     "microphone": {
       "id": "hero_microphone",
-      "role": "hero_asset",
-      "style": "premium modern large-diaphragm studio condenser",
-      "finish": "matte black with fine brushed-metal texture",
+      "role": "visual_anchor",
+      "style": "premium real-world large-diaphragm studio condenser, photographed product-true",
+      "finish": "matte black metal with fine brushed texture",
       "position_normalized": { "x": 0.5, "y": 0.63 },
       "height_normalized": 0.56,
       "parts": [
-        { "name": "capsule_head", "detail": "pill-shaped head with real woven mesh grille", "material_ref": "mic_grille_mesh" },
-        { "name": "body", "detail": "cylindrical brushed-metal body, vertical brushing direction", "material_ref": "mic_body_metal" },
-        { "name": "bezel_ring", "detail": "machined ring joining head and body", "material_ref": "mic_body_metal" },
-        { "name": "stand", "detail": "slim rod on a low-profile round base", "material_ref": "mic_stand_metal" }
+        { "name": "capsule_head", "detail": "pill-shaped head with a real woven wire grille — visible weave, physically accurate open structure", "material_ref": "mic_grille_mesh" },
+        { "name": "body", "detail": "cylindrical metal body with vertical brushing and machined tolerances", "material_ref": "mic_body_metal" },
+        { "name": "bezel_ring", "detail": "machined ring joining head and body with a fine chamfer", "material_ref": "mic_body_metal" },
+        { "name": "stand", "detail": "slim rod on a weighted low-profile round base", "material_ref": "mic_stand_metal" }
       ],
-      "focus": "razor sharp — the focus plane is locked to the capsule while the background falls softly out of focus",
-      "reflection_in_lake": { "enabled": true, "opacity": 0.12, "softness": "blurred, vertically squashed" },
-      "animation": "static — only camera motion, depth of field and light interact with it"
+      "imperfections": "tiny real-world flaws — hairline micro-scratches, faint edge wear on the base rim, a few microscopic dust specks; nothing pristine or synthetic",
+      "shadows": "physically correct contact shadow and soft directional shadow from the low sun",
+      "proportions": "physically accurate to a real studio microphone; correct perspective at 50mm from camera height",
+      "focus": "extremely sharp — the focus plane is locked to the capsule while the mountains gradually soften with distance",
+      "reflection_in_lake": { "enabled": true, "opacity": 0.12, "softness": "blurred, vertically squashed, broken by ripples" },
+      "animation": "static — only camera motion, light and depth of field interact with it"
     },
     "voice_waveform": {
       "id": "voice_waveform",
-      "role": "live voice visualizer",
-      "placement": "emerging in front of the microphone, centered on the vertical axis",
+      "role": "physically integrated sound visualization",
+      "integration": "NOT a UI overlay — the microphone appears to emit a faint luminous visualization of detected sound that exists in the scene's air, wrapping around the microphone and interacting with its surfaces",
       "geometry": {
-        "type": "sinusoidal_composite",
+        "type": "sinusoidal_band_encircling_microphone",
+        "placement": "a slim horizontal band around the microphone at lower-body height, passing in front of the stand and slightly behind it, seen nearly edge-on",
         "position_normalized": { "center_x": 0.5, "baseline_y": 0.815 },
         "width_normalized": 0.4,
-        "edge_window": "Hann window so both ends taper to zero"
+        "depth_behavior": "the portion passing behind the microphone is dimmed and softly occluded",
+        "edge_window": "asymmetric taper — both ends fade to zero at slightly different rates, never mirror-symmetric"
       },
       "material_ref": "waveform_emissive",
       "behavior": {
-        "description": "Organic speech rhythm — smooth phrase-like swells separated by near-silent rests, no exaggerated movements.",
+        "description": "Gently changes amplitude as if someone is speaking calmly — a natural, irregular speech pattern with swells, hesitations and rests.",
         "amplitude_envelope": {
-          "model": "product of low-frequency sinusoids shaped by a smoothstep gate",
-          "temporal_frequencies_hz": [0.2, 0.3, 0.5],
+          "model": "sum and product of low-frequency sinusoids shaped by a smoothstep gate, with scattered phases so the rhythm never feels metronomic",
+          "temporal_frequencies_hz": [0.1, 0.2, 0.3, 0.5, 0.7],
           "floor": 0.12,
-          "attack_release": "always smooth, no hard cuts"
+          "attack_release": "always smooth, no hard cuts",
+          "irregularity": "phases and weights chosen so no two swells within the loop have the same shape; never perfectly repetitive, never perfectly symmetrical"
         },
         "carrier_waves": [
           { "spatial_cycles": 2.2, "temporal_frequency_hz": 0.7, "relative_amplitude": 1.0, "direction": "leftward" },
           { "spatial_cycles": 4.7, "temporal_frequency_hz": 0.4, "relative_amplitude": 0.42, "direction": "rightward" },
           { "spatial_cycles": 8.3, "temporal_frequency_hz": 0.9, "relative_amplitude": 0.2, "direction": "leftward" }
         ],
+        "restraint": "remains subtle and premium at all times; never dominates the landscape",
         "loop_safe": true
       }
     }
@@ -209,15 +236,16 @@
       "anisotropy_direction": "vertical, aligned with the brushing",
       "clearcoat": 0.08,
       "clearcoat_roughness": 0.4,
-      "normal_detail": "fine brushed micro-scratches, subtle machining marks",
-      "reflections": "subtle ray-traced environment reflections — matte, never glossy"
+      "normal_detail": "fine brushed micro-scratches, subtle machining marks, microscopic surface waviness",
+      "imperfection_maps": "hairline scratches and faint smudge variation in roughness — real handled metal, not showroom-perfect",
+      "reflections": "subtle physically traced environment reflections — matte, never glossy"
     },
     "mic_grille_mesh": {
       "model": "PBR metallic-roughness",
       "base_color": "#14171c",
       "metallic": 1.0,
       "roughness": 0.45,
-      "geometry": "two crossed layers of actual woven steel wire",
+      "geometry": "two crossed layers of actual woven steel wire with real depth and occlusion between layers",
       "moire_mitigation": "supersampled to avoid aliasing at 4K"
     },
     "mic_stand_metal": {
@@ -232,26 +260,27 @@
       "ior": 1.33,
       "roughness_range": [0.02, 0.06],
       "absorption_tint": "#0d2233",
-      "features": ["ray-traced reflections", "ray-traced refraction", "1–2 cm capillary ripple normals"],
+      "features": ["physically traced reflections", "refraction", "0.5–2 cm capillary ripple normals producing tiny natural reflection distortions"],
       "colors": { "near_horizon": "#22334f", "foreground": "#101b2e" }
     },
     "snow_granite": {
       "model": "PBR dielectric",
-      "snow": { "albedo": "#e6edf7", "subsurface_scattering_mm": 0.3, "roughness": 0.35 },
-      "rock": { "albedo": "#6f83a8", "roughness": 0.8 },
+      "snow": { "albedo": "#e6edf7", "subsurface_scattering_mm": 0.3, "roughness": 0.35, "distribution": "natural patches following gullies and shaded faces" },
+      "rock": { "albedo": "#6f83a8", "roughness": 0.8, "detail": "stratified granite with erosion patterns, never smooth or geometric" },
       "sunlit_rim_color": "#f0c489"
     },
     "alpine_rock": {
       "model": "PBR dielectric",
       "albedo": "#46597d",
       "snow_patches_albedo": "#c7d4e6",
-      "roughness": 0.8
+      "roughness": 0.8,
+      "detail": "scree, ledges and sparse high-altitude vegetation breaking up the surface"
     },
     "forested_hillside": {
       "model": "PBR dielectric",
       "albedo": "#2e3f5e",
       "roughness": 0.9,
-      "detail": "dense conifer canopy resolved as soft texture at distance"
+      "detail": "dense conifer canopy with irregular gaps and height variation"
     },
     "pine_foliage": {
       "model": "PBR dielectric with translucency",
@@ -260,102 +289,106 @@
       "roughness": 0.75,
       "backlight_response": "warm glow through needle edges facing the sun"
     },
-    "volumetric_mist": {
+    "alpine_grass": {
+      "model": "PBR dielectric with translucency",
+      "albedo": "#243426",
+      "translucency": 0.35,
+      "detail": "thin irregular blades, rendered soft by the shallow depth of field"
+    },
+    "volumetric_fog": {
       "model": "heterogeneous participating medium",
       "scattering_albedo": 0.95,
       "phase_anisotropy_g": 0.6,
-      "density": "thin, with soft procedural falloff at volume edges",
+      "density": "thin, with ragged procedural falloff — natural fog structure, never a uniform plane",
       "tint": "#d6e2f0"
     },
     "dust_mote": {
       "model": "forward-scattering point particle",
-      "visibility": "bright only against light shafts, invisible in shadow",
+      "visibility": "bright only against the volumetric light, invisible in shadow",
       "size_variation": 0.6
     },
     "waveform_emissive": {
-      "model": "HDR emissive",
+      "model": "soft volumetric emissive",
       "core_color": "#3fd8ff",
       "edge_color": "#2f8fff",
-      "gradient": "cyan core blending to blue at the extremities",
-      "emission_intensity": "bright enough to bloom softly, never clipping to white",
+      "gradient": "cyan core blending to blue at the extremities, desaturated slightly by the filmic grade so it sits inside the scene's palette",
+      "emission_intensity": "faint — reads as luminous air, never as a graphic; no neon",
       "casts_light": true,
       "light_spill": {
         "targets": ["microphone body", "water surface below"],
-        "character": "slight soft cyan bounce, intensity kept low",
-        "max_contribution": 0.1,
+        "character": "very subtle cyan reflection on the nearby microphone surface, modulated by the speech envelope",
+        "max_contribution": 0.08,
         "follows_envelope": true
       },
-      "mirror_trace": { "enabled": true, "opacity": 0.22, "vertical_flip": true }
+      "mirror_trace": { "enabled": true, "opacity": 0.18, "vertical_flip": true, "distortion": "broken subtly by water ripples" }
     }
   },
 
   "lighting": {
     "key_light": {
-      "source": "rising sun",
+      "source": "the real rising sun",
       "color_temperature_kelvin": 3200,
       "elevation_degrees": 4,
-      "direction": "low, from screen-right of center",
+      "direction": "low on the horizon, from screen-right of center",
       "quality": "soft — naturally diffused by atmosphere and mist",
-      "produces": ["golden sunrise highlights", "long soft shadows", "warm rim light on the microphone's right edge"]
+      "produces": ["warm sunlight on the edges of the microphone", "long soft shadows", "golden highlights on peaks, fog and water"]
     },
     "fill_light": {
       "source": "blue sky dome",
       "color_temperature_kelvin": 9500,
       "intensity_relative_to_key": 0.55,
-      "produces": "cool blue mountain shadows and soft ambient fill"
+      "produces": "cool blue shadows in the mountains and soft ambient fill"
     },
-    "volumetric_god_rays": {
+    "volumetric_light": {
       "enabled": true,
-      "source": "sunlight passing through ridge gaps and mist volumes",
+      "source": "sunlight passing naturally through the mountain mist",
       "phase_anisotropy_g": 0.6,
-      "intensity": "soft — visible but never theatrical",
+      "intensity": "subtle — present, never theatrical",
       "shimmer": "±3% intensity breathing at 0.2 Hz, loop-safe"
     },
     "practical_light": {
       "source": "voice_waveform emissive",
-      "effect": "slight cyan spill onto the microphone body and water, modulated by the speech envelope"
+      "effect": "faint cyan spill onto the microphone body and water, modulated by the speech envelope"
     },
-    "rim_light": {
-      "target": "hero_microphone",
-      "color": "rgba(240, 196, 137, 0.35)",
-      "motivation": "physically motivated by the sunrise behind camera-right",
-      "coverage": "thin warm edge along the capsule and body's sun-facing side"
-    },
+    "global_illumination": "physically realistic multi-bounce — sky bounce into shadows, warm ground bounce near sunlit rock",
     "exposure": {
       "mode": "natural HDR",
-      "strategy": "protect sun-core highlights with filmic rolloff while holding shadow detail in the mountain shadows",
+      "strategy": "protect the sun-core with soft cinematic highlight rolloff while holding shadow detail; no exaggerated glow anywhere",
       "flicker": "none"
     },
-    "global_illumination": "full multi-bounce — sky bounce into shadows, warm ground bounce near the sunlit ridge",
-    "palette_strategy": "cool blues and steel tones overall, with restrained golden sunrise accents on peaks, mist, water and the microphone's rim"
+    "lens_flare": "only when physically appropriate — a restrained veiling glare as the sun grazes the frame edge of the lens; never a stylized flare element",
+    "palette_strategy": "natural colors: deep blue shadows, warm golden highlights, everything slightly desaturated toward a filmic neutral"
   },
 
   "camera": {
-    "body": "full-frame digital cinema camera",
+    "body": "professional full-frame cinema camera",
     "sensor_mm": { "width": 36, "height": 24 },
+    "position": "at the lake edge, lens at microphone height",
     "lens": {
       "focal_length_mm": 50,
-      "type": "spherical cinema prime",
+      "type": "spherical cinema prime with natural optical character",
       "aperture": "T2.0",
       "focus_distance": "locked to the microphone capsule",
-      "depth_of_field": "shallow — background mountains melt into soft bokeh while the microphone stays razor sharp",
+      "depth_of_field": "large realistic optical falloff — the microphone is extremely sharp and the mountains gradually soften with distance, layer by layer",
       "focus_breathing": {
         "enabled": true,
         "model": "field of view oscillates ±0.15% sinusoidally at 0.1 Hz",
-        "character": "subtle, like a focus pull settling"
+        "character": "subtle lens breathing, as on a real cinema prime"
       },
-      "bokeh": "smooth cinematic discs, slight cat-eye toward frame edges"
+      "natural_characteristics": ["gentle field curvature", "mild corner softness wide open", "smooth focus rolloff", "0.2% barrel distortion"],
+      "bokeh": "smooth optical discs, slight cat-eye toward frame edges"
     },
     "movement": {
       "type": "dolly_push_in",
       "total_travel_percent": 1.0,
       "profile": "cosine round trip (1.000 → 1.010 → 1.000) so the loop point stays invisible",
-      "feel": "professional cinema dolly — no sudden movements",
-      "stabilization_drift": {
+      "feel": "expensive, calm and intentional — professional dolly, almost imperceptible",
+      "micro_drift": {
         "enabled": true,
-        "model": "per-axis sum of two sinusoids (0.2 Hz and 0.3 Hz) with phase offsets, amplitude ≤ 0.04% of frame width",
-        "character": "microscopic handheld drift that keeps the frame feeling operated, not synthetic"
+        "model": "per-axis sum of two sinusoids (0.2 Hz and 0.3 Hz) with phase offsets, amplitude ≤ 0.02% of frame width",
+        "character": "microscopic stabilized drift — a supported camera breathing, never shake, never handheld wobble"
       },
+      "exclusions": ["no artificial camera shake", "no drone movement", "no dramatic movement", "no sudden movements"],
       "parallax": {
         "background_layers_factor": 0.65,
         "midground_factor": 1.0,
@@ -367,7 +400,7 @@
 
   "animations": [
     {
-      "id": "camera_dolly_in",
+      "id": "camera_push_in",
       "target": "camera",
       "property": "zoom",
       "keyframe_model": "zoom(t) = 1 + 0.005 * (1 - cos(2π * t / 10))",
@@ -385,23 +418,23 @@
       "loop_safe": true
     },
     {
-      "id": "handheld_drift",
+      "id": "camera_micro_drift",
       "target": "camera",
       "property": ["offset_x", "offset_y"],
-      "model": "per axis: 0.0004 * W * (sin(2π * 2t/10 + φ_axis) + 0.6 * sin(2π * 3t/10 + 2φ_axis))",
+      "model": "per axis: 0.0002 * W * (sin(2π * 2t/10 + φ_axis) + 0.6 * sin(2π * 3t/10 + 2φ_axis))",
       "period_seconds": 10.0,
       "character": "microscopic, sub-pixel at viewing distance",
       "loop_safe": true
     },
     {
-      "id": "mist_drift",
-      "target": "assets.mist_volumes",
+      "id": "fog_drift",
+      "target": "assets.fog_layer",
       "property": ["offset_x", "density"],
       "period_seconds": 10.0,
       "drift_amplitude_normalized_x": 0.013,
       "density_breathing_amplitude": 0.05,
       "phase_offsets_per_volume_radians": [0.0, 2.1, 4.2],
-      "character": "very slow, barely perceptible",
+      "character": "slow fog movement across the lake surface, barely perceptible",
       "loop_safe": true
     },
     {
@@ -410,43 +443,52 @@
       "property": "offset_x",
       "model": "0.004 * W * sin(2π * t / 10)",
       "period_seconds": 10.0,
-      "character": "slow high-altitude drift",
+      "character": "extremely slow high-altitude drift",
       "loop_safe": true
     },
     {
-      "id": "lake_ripples",
+      "id": "water_micro_ripples",
       "target": "assets.lake",
-      "property": ["glint_opacity", "glint_offset_x", "surface_normal_undulation"],
-      "period_seconds_per_glint": [10.0, 5.0, 3.3333333333333335, 2.5],
-      "character": "tiny water ripples and sparse twinkling glints, brighter and warmer inside the sun's light column",
+      "property": ["surface_normal_undulation", "glint_opacity", "glint_offset_x", "reflection_distortion"],
+      "period_seconds_per_component": [10.0, 5.0, 3.3333333333333335, 2.5],
+      "character": "extremely subtle ripples that gently disturb the reflections; sparse glints, warmer inside the sun's light column",
       "loop_safe": true
     },
     {
-      "id": "tree_sway",
-      "target": "assets.pine_forest",
+      "id": "distant_tree_sway",
+      "target": "assets.distant_pines",
       "property": "rotation_about_base",
       "model": "θ(t) = 0.008 * sin(2π * 2t/10 + φ_tree) + 0.003 * sin(2π * 3t/10 + 2φ_tree) radians",
       "max_deflection_degrees": 0.63,
       "per_tree_phase": true,
-      "character": "gentle, organic, non-synchronized",
+      "character": "gentle distant movement in the morning wind, non-synchronized",
       "loop_safe": true
     },
     {
-      "id": "dust_orbits",
-      "target": "assets.dust_particles",
-      "property": "position",
-      "model": "closed Lissajous orbits — per particle: A_x sin(2π k_x t/10 + φ), A_y sin(2π k_y t/10 + ψ) with integer k",
+      "id": "foreground_vegetation_stir",
+      "target": "assets.foreground_vegetation",
+      "property": "blade_bend",
+      "model": "smooth gusts gated by 0.5 + 0.5*sin(2π * t/10 + φ_blade), peak deflection 1.5°, long still intervals between stirs",
       "period_seconds": 10.0,
-      "character": "floating motes catching the sunlight",
+      "character": "occasional slight movement, mostly at rest",
+      "loop_safe": true
+    },
+    {
+      "id": "particle_orbits",
+      "target": "assets.atmospheric_particles",
+      "property": "position",
+      "model": "closed orbits — per particle: A_x sin(2π k_x t/10 + φ), A_y sin(2π k_y t/10 + ψ) with integer k",
+      "period_seconds": 10.0,
+      "character": "tiny motes drifting through the volumetric light",
       "loop_safe": true
     },
     {
       "id": "waveform_voice_pulse",
       "target": "assets.voice_waveform",
       "property": "amplitude_envelope",
-      "model": "env(t) = 0.12 + 0.88 * smoothstep(0.14, 0.62, mix of sin(2π·k·t/10) terms, k ∈ {2,3,5})",
+      "model": "env(t) = 0.12 + 0.88 * smoothstep(0.14, 0.62, weighted mix of sin(2π·k·t/10 + φ_k) terms, k ∈ {1,2,3,5,7}, phases scattered)",
       "period_seconds": 10.0,
-      "character": "breathing waveform with a natural speech rhythm — swell, sustain, rest",
+      "character": "calm speech — irregular swells, hesitations and rests; no two swells alike within the loop",
       "loop_safe": true
     },
     {
@@ -455,23 +497,28 @@
       "property": "glow_intensity",
       "model": "1 + 0.03 * sin(2π * 2t/10)",
       "period_seconds": 5.0,
-      "character": "imperceptible warmth breathing, shared by the god rays",
+      "character": "imperceptible warmth breathing shared by the volumetric light",
       "loop_safe": true
     }
   ],
 
   "rendering": {
-    "style": "photorealistic",
-    "pipeline": "physically based rendering (PBR) throughout",
+    "style": "photorealistic — must read as captured footage, never as a render",
+    "pipeline": "physically based rendering throughout, spectral where available",
     "engine_hints": [
       "unbiased path tracing with full global illumination",
-      "ray-traced reflections and refractions on water and metal",
-      "volumetric integration for mist, god rays and atmospheric haze",
-      "AI or temporal denoiser tuned to preserve grain-free micro-detail before grain is re-applied in post"
+      "physically traced reflections and refraction on water and metal",
+      "volumetric integration for fog, light shafts and atmospheric haze",
+      "denoiser tuned to preserve micro-detail before grain is re-applied in post"
     ],
-    "detail_level": "ultra-high — needle clusters, brushed-metal micro-scratches and woven grille wire all resolve at 4K",
+    "detail_level": "ultra-high — grille weave, brushed-metal micro-scratches, rock strata and needle clusters all resolve at 4K",
+    "anti_synthetic_measures": [
+      "no repeated textures or instanced patterns visible at 4K",
+      "no perfectly straight ridgelines or evenly spaced trees",
+      "highlight and shadow behavior driven by physical light transport only"
+    ],
     "motion_blur": { "enabled": true, "shutter_angle_degrees": 180 },
-    "anti_aliasing": "supersampling or high-sample TAA, no visible edge crawl",
+    "anti_aliasing": "supersampling or high-sample temporal AA, no edge crawl",
     "color_pipeline": {
       "working_space": "ACEScg",
       "output": "Rec.709 / sRGB display-referred SDR master, HDR-ready grade"
@@ -488,40 +535,35 @@
   "post_processing": {
     "bloom": {
       "enabled": true,
-      "character": "soft, wide-radius bloom on the sun core and waveform — elegant glow, never hazy",
-      "threshold": "high — only true highlights bloom",
-      "intensity": 0.25
-    },
-    "anamorphic_highlights": {
-      "enabled": true,
-      "character": "soft anamorphic-style horizontal streaks on the sun core and brightest water glints",
-      "intensity": 0.1,
-      "note": "styling only — the taking lens remains spherical"
+      "character": "restrained physical halation on true highlights only — sun core, brightest glints, waveform core",
+      "threshold": "high",
+      "intensity": 0.18,
+      "note": "no exaggerated glow"
     },
     "lens_effects": {
-      "veiling_glare": "restrained warm glare near the sun",
-      "chromatic_aberration": 0.05,
+      "veiling_glare": "subtle warm glare near the sun, physically motivated only",
+      "chromatic_aberration": 0.04,
       "distortion": "0.2% barrel, cinema-prime typical",
-      "bokeh_treatment": "cinematic — smooth discs, no busy highlights"
+      "bokeh_treatment": "optical — smooth discs, slight cat-eye at edges, no synthetic shapes"
     },
     "tone_mapping": {
-      "curve": "soft filmic contrast with gentle highlight rolloff",
-      "black_point": "lifted a touch for a premium filmic floor"
+      "curve": "soft filmic contrast with gentle cinematic highlight rolloff",
+      "black_point": "lifted a touch — deep blue shadows retain detail"
     },
     "color_grade": {
-      "look": "cool teal-blue shadows, neutral mids, golden highlights",
-      "saturation": "restrained",
-      "inspiration": "flagship product launch film grading",
+      "look": "premium cinematic: deep blue shadows, warm golden highlights, neutral mids",
+      "saturation": "slightly desaturated filmic look; oversaturation avoided everywhere, including the waveform",
+      "dynamic_range": "high — natural HDR feel within an SDR master",
       "consistency": "grade is static across the loop — only light animates"
     },
-    "vignette": { "enabled": true, "strength": 0.35, "softness": "wide" },
+    "vignette": { "enabled": true, "strength": 0.3, "softness": "wide, optical falloff" },
     "film_grain": {
       "enabled": true,
       "intensity": 0.015,
       "size": "fine 4K-scaled photochemical grain",
       "loop_safe": "grain pattern cycles with the 10 s loop"
     },
-    "sharpening": "subtle, applied only inside the focus plane",
+    "sharpening": "none beyond capture sharpness — the lens does the work",
     "overlays": "none — no text, no watermarks, no UI"
   },
 
@@ -531,10 +573,16 @@
     "no_ui_elements": true,
     "no_people": true,
     "no_animals": true,
-    "aesthetic": "premium luxury — minimal, calm, commercial-grade",
-    "motion_budget": "everything moves almost invisibly; nothing distracts from the interface overlaid on top",
+    "avoid": [
+      "illustration", "stylized 3D", "CGI appearance", "low-poly mountains", "geometric mountains",
+      "vector graphics", "cartoon look", "artificial gradients", "fake sun", "fake reflections",
+      "simplistic microphone", "game-engine aesthetic", "excessive bloom", "excessive neon",
+      "flat lighting", "symmetrical artificial landscape", "generic stock footage", "UI-looking waveform"
+    ],
+    "aesthetic": "calm, peaceful, sophisticated, premium — a luxury commercial frame",
+    "motion_budget": "everything moves almost invisibly and naturally slowly; nothing distracts from interface content overlaid on top",
     "flash_safety": "no strobing or rapid luminance changes",
-    "loop_requirement": "mathematically seamless at exactly 10.000 s",
+    "loop_requirement": "mathematically seamless and visually invisible at exactly 10.000 s",
     "overlay_readiness": "quiet upper and lower thirds; the microphone is the only strong focal point"
   }
 }
