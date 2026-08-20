@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Voice Background — vidéo réelle + onde live</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #101b2e; }
+  video, canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; }
+  video { object-fit: cover; }
+</style>
+</head>
+<body>
+<!--
+  Composant de fond pour l'application :
+  - background.mp4 : la vidéo photoréaliste en boucle (à générer — voir
+    video-generation-prompts.md), posée à côté de ce fichier.
+  - L'onde vocale est rendue EN DIRECT par-dessus, branchée sur le microphone
+    réel (repli sur un rythme de parole synthétique si l'accès est refusé).
+  - Les paramètres visuels de l'onde sont lus dans
+    microphone-cinematic-animation.json quand la page est servie en HTTP.
+-->
+<video id="bg" autoplay muted loop playsinline>
+  <source src="background.mp4" type="video/mp4">
+</video>
+<canvas id="wave"></canvas>
+
+<script>
+(async () => {
+  'use strict';
+
+  // ----------------------------------------------------- spec (avec replis)
+  let SPEC = {};
+  try {
+    const res = await fetch('microphone-cinematic-animation.json', { cache: 'no-store' });
+    if (res.ok) SPEC = await res.json();
+  } catch (_) { /* file:// — replis ci-dessous */ }
+
+  const get = (path, fallback) => {
+    const v = path.split('.').reduce((o, k) => (o && o[k] !== undefined) ? o[k] : undefined, SPEC);
+    return v === undefined ? fallback : v;
+  };
+
+  const TAU = Math.PI * 2;
+  const DURATION = get('project.duration_seconds', 10);
+  const CENTER_X = get('assets.voice_waveform.geometry.position_normalized.center_x', 0.5);
+  const BASE_Y = get('assets.voice_waveform.geometry.position_normalized.baseline_y', 0.815);
+  const WIDTH_N = get('assets.voice_waveform.geometry.width_normalized', 0.4);
+  const CORE = get('materials.waveform_emissive.core_color', '#3fd8ff');
+  const EDGE = get('materials.waveform_emissive.edge_color', '#2f8fff');
+  const GLOW = 'rgba(63,216,255,0.55)';
+  const MIRROR_OPACITY = get('materials.waveform_emissive.mirror_trace.opacity', 0.18);
+  const SPILL_MAX = get('materials.waveform_emissive.light_spill.max_contribution', 0.08);
+  const ENV_FLOOR = get('assets.voice_waveform.behavior.amplitude_envelope.floor', 0.12);
+  const CARRIERS = get('assets.voice_waveform.behavior.carrier_waves', [
+    { spatial_cycles: 2.2, temporal_frequency_hz: 0.7, relative_amplitude: 1.0, direction: 'leftward' },
+    { spatial_cycles: 4.7, temporal_frequency_hz: 0.4, relative_amplitude: 0.42, direction: 'rightward' },
+    { spatial_cycles: 8.3, temporal_frequency_hz: 0.9, relative_amplitude: 0.2, direction: 'leftward' }
+  ]).map((c, i) => ({
+    s: c.spatial_cycles,
+    f: c.temporal_frequency_hz,
+    a: c.relative_amplitude,
+    dir: c.direction === 'rightward' ? 1 : -1,
+    ph: [0.5, 2.0, 4.2, 1.1][i % 4]
+  }));
+
+  const canvas = document.getElementById('wave');
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+
+  function resize() {
+    canvas.width = innerWidth * dpr;
+    canvas.height = innerHeight * dpr;
+  }
+  resize();
+  addEventListener('resize', resize);
+
+  // ------------------------------------------------ enveloppe : micro réel…
+  let analyser = null, timeData = null;
+  let level = 0;                                   // niveau lissé attaque/relâche
+
+  async function tryMicrophone() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: true, noiseSuppression: true }
+      });
+      const ac = new (window.AudioContext || window.webkitAudioContext)();
+      const src = ac.createMediaStreamSource(stream);
+      analyser = ac.createAnalyser();
+      analyser.fftSize = 1024;
+      timeData = new Float32Array(analyser.fftSize);
+      src.connect(analyser);
+    } catch (_) { /* refusé ou indisponible → enveloppe synthétique */ }
+  }
+  tryMicrophone();
+
+  function micEnvelope() {
+    analyser.getFloatTimeDomainData(timeData);
+    let sum = 0;
+    for (let i = 0; i < timeData.length; i++) sum += timeData[i] * timeData[i];
+    const rms = Math.sqrt(sum / timeData.length);
+    const target = Math.min(1, rms * 9);           // sensibilité voix parlée
+    level += (target - level) * (target > level ? 0.35 : 0.06); // attaque vive, relâche douce
+    return ENV_FLOOR + (1 - ENV_FLOOR) * level;
+  }
+
+  // …ou rythme de parole synthétique, boucle exacte de 10 s (spec `animations`).
+  const ENV_K = get('assets.voice_waveform.behavior.amplitude_envelope.temporal_frequencies_hz',
+    [0.1, 0.2, 0.3, 0.5, 0.7]).map(f => Math.max(1, Math.round(f * 10)));
+  const ENV_PH = [0.9, 4.1, 2.3, 5.6, 1.7, 3.2, 0.4, 5.0];
+  const ENV_W  = [0.30, 0.24, 0.20, 0.15, 0.11, 0.08, 0.06, 0.05];
+  const smoothstep = (a, b, x) => {
+    const u = Math.min(1, Math.max(0, (x - a) / (b - a)));
+    return u * u * (3 - 2 * u);
+  };
+
+  function syntheticEnvelope(t) {
+    const p = (t % DURATION) / DURATION;
+    let raw = 0, ws = 0;
+    for (let i = 0; i < ENV_K.length; i++) {
+      const w = ENV_W[i % ENV_W.length];
+      raw += w * (0.5 + 0.5 * Math.sin(TAU * ENV_K[i] * p + ENV_PH[i % ENV_PH.length]));
+      ws += w;
+    }
+    return ENV_FLOOR + (1 - ENV_FLOOR) * smoothstep(0.34, 0.66, raw / ws);
+  }
+
+  // ------------------------------------------------------------------ rendu
+  const SAMPLES = 192;
+
+  function waveY(u, t, env, ampPx) {
+    const hann = 0.5 - 0.5 * Math.cos(TAU * u);
+    let y = 0;
+    for (const c of CARRIERS) y += c.a * Math.sin(TAU * (c.s * u + c.dir * c.f * t) + c.ph);
+    return env * hann * y * ampPx;
+  }
+
+  function trace(g, t, env, cx, by, halfW, ampPx, yScale, yOff) {
+    g.beginPath();
+    for (let i = 0; i <= SAMPLES; i++) {
+      const u = i / SAMPLES;
+      const x = cx - halfW + u * halfW * 2;
+      const y = by + (yOff || 0) + waveY(u, t, env, ampPx) * yScale;
+      if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
+    }
+  }
+
+  function render(now) {
+    const t = now / 1000;
+    const w = innerWidth, h = innerHeight;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    const env = analyser ? micEnvelope() : syntheticEnvelope(t);
+    const cx = CENTER_X * w;
+    const by = BASE_Y * h;
+    const halfW = WIDTH_N * w / 2;
+    const ampPx = Math.max(18, h * 0.032);         // ≈ 34 px à 1080p
+
+    // Halo discret projeté sous l'onde (light spill de la spec).
+    ctx.save();
+    ctx.translate(cx, by + h * 0.024);
+    ctx.scale(1, 0.14);
+    const pool = ctx.createRadialGradient(0, 0, 0, 0, 0, halfW * 1.1);
+    pool.addColorStop(0, `rgba(63,216,255,${(SPILL_MAX * 1.3 * env).toFixed(3)})`);
+    pool.addColorStop(1, 'rgba(63,216,255,0)');
+    ctx.fillStyle = pool;
+    ctx.fillRect(-halfW * 1.2, -halfW * 1.2, halfW * 2.4, halfW * 2.4);
+    ctx.restore();
+
+    const grad = ctx.createLinearGradient(cx - halfW, 0, cx + halfW, 0);
+    grad.addColorStop(0, EDGE);
+    grad.addColorStop(0.3, CORE);
+    grad.addColorStop(0.7, CORE);
+    grad.addColorStop(1, EDGE);
+
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = grad;
+
+    ctx.globalAlpha = MIRROR_OPACITY;              // trace miroir atténuée
+    ctx.lineWidth = 2;
+    trace(ctx, t, env, cx, by, halfW, ampPx, -0.35, 0);
+    ctx.stroke();
+
+    ctx.globalAlpha = 0.16;                        // halo large
+    ctx.shadowColor = GLOW;
+    ctx.shadowBlur = 26;
+    ctx.lineWidth = 8;
+    trace(ctx, t, env, cx, by, halfW, ampPx, 1, 0);
+    ctx.stroke();
+
+    ctx.globalAlpha = 0.95;                        // cœur net
+    ctx.shadowBlur = 14;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.restore();
+
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+})();
+</script>
+</body>
+</html>
