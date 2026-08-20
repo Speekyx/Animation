@@ -1,0 +1,22 @@
+{
+  "shot": {
+    "camera": "full-frame cinema camera, 35mm lens, smooth crane move, one continuous take, no cuts",
+    "sequence": "starts high above a forest looking straight down at the canopy and forest floor; dives slowly toward the ground, passing close to plants and wildflowers; softly decelerates just above the grass, then rises and tilts up to reveal a clearing with a glowing emblem sign, and behind it a misty valley with snow-capped mountains in the distance",
+    "duration": "10 seconds, slow and elegant"
+  },
+  "scene": {
+    "environment": "lush alpine forest at sunrise: tall pines, green undergrowth, ferns, moss, colorful wildflowers",
+    "ground": "detailed forest floor with flowers, plants and soft morning dew",
+    "atmosphere": "thin morning mist between the trees, volumetric sunlight rays through the canopy, tiny pollen particles floating in the light"
+  },
+  "subject": {
+    "object": "a premium minimalist brand emblem sign standing in the clearing, like a high-end matte-black rounded monolith totem",
+    "details": "brushed metal, subtle reflections, tiny imperfections, warm golden sunrise rim light"
+  },
+  "effect": {
+    "element": "a subtle glowing cyan-blue sine waveform floating in front of the emblem sign",
+    "behavior": "gently pulsing like a calm voice visualization, soft glow, faint cyan light spill on the sign and nearby plants, elegant, never dominant, no neon"
+  },
+  "style": "photorealistic real camera footage, luxury tech commercial; natural sunrise light, golden highlights, cool blue shadows, natural HDR, soft filmic contrast; premium cinematic grade, slightly desaturated; smooth, calm, premium",
+  "avoid": "illustration, 3D render, CGI, cartoon, low-poly, vector art, neon, excessive bloom, oversaturated colors, flat lighting, text, watermark, UI elements, people, animals, camera shake, jerky motion"
+}
