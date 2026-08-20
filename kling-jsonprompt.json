@@ -1,0 +1,36 @@
+{
+  "shot": {
+    "type": "static tripod, locked-off cinematic shot",
+    "camera": "full-frame cinema camera, 50mm prime lens, T2.0",
+    "movement": "extremely slow, almost imperceptible 1% dolly push-in, no shake",
+    "focus": "microphone razor sharp, mountains softly out of focus, shallow depth of field",
+    "duration": "10 seconds, designed as a seamless loop"
+  },
+  "scene": {
+    "location": "edge of a mirror-calm alpine mountain lake",
+    "time": "first minutes after sunrise",
+    "background": "huge snow-capped mountains with natural rock formations and atmospheric haze, layered depth",
+    "mist": "thin morning fog drifting very slowly over the lake surface, soft volumetric sunlight passing through it",
+    "water": "crystal-clear reflections with tiny natural ripple distortions",
+    "vegetation": "distant pine trees moving almost imperceptibly in the morning wind",
+    "particles": "tiny dust motes catching the low sunlight"
+  },
+  "subject": {
+    "object": "premium matte-black studio condenser microphone on a small round desk stand",
+    "position": "centered, slightly below the middle of the frame",
+    "details": "realistic brushed metal, fine woven mesh grille, subtle reflections, tiny surface imperfections, physically accurate proportions, warm golden sunrise rim light on its right edge"
+  },
+  "effect": {
+    "element": "a very subtle glowing cyan-blue sine waveform floating in front of the microphone",
+    "behavior": "gently pulsing like a calm voice visualization, soft volumetric glow, faint cyan light spill on the microphone body and the water",
+    "restraint": "extremely subtle and elegant, never dominant, no neon, not a UI overlay"
+  },
+  "style": {
+    "look": "photorealistic real camera footage, luxury technology commercial filmed in the Alps",
+    "lighting": "natural sunrise light, golden highlights, cool blue mountain shadows, natural HDR exposure, soft filmic contrast",
+    "grading": "premium cinematic color grade, slightly desaturated, deep blue shadows, warm golden highlights",
+    "motion": "everything moves almost invisibly, calm, peaceful, premium"
+  },
+  "negative_prompt": "illustration, 3D render, CGI look, cartoon, low-poly, vector art, neon, excessive bloom, oversaturated colors, flat lighting, text, logo, watermark, UI elements, people, animals, camera shake, fast motion, drone shot",
+  "_usage": "Coller les sections shot→style dans le champ prompt de Kling (mode Professional, 10 s, 16:9) et negative_prompt dans le champ negative. Pour une boucle parfaite : générer d'abord l'image fixe (sans 'effect'), puis image-to-video avec la même image en frame de début et de fin. Pour l'app, préférer la version sans 'effect' et laisser app-background.html dessiner l'onde en direct."
+}
