@@ -45,9 +45,9 @@
     "sky": { "colors": { "zenith": "#16233f", "mid": "#4c6a9c", "horizon": "#f4c98a" } },
     "sun": { "position_normalized": { "x": 0.62, "y": 0.435 }, "core_color": "#ffe9c4", "glow_color": "#f2b370" },
     "mountains": [
-      { "id": "far_range", "base_color": "#6f83a8", "snow_color": "#e6edf7", "sunlit_rim_color": "#f0c489", "defocus_blur_px": 3 },
-      { "id": "mid_range", "base_color": "#46597d", "snow_color": "#c7d4e6", "defocus_blur_px": 1.5 },
-      { "id": "near_hills", "base_color": "#2e3f5e", "defocus_blur_px": 0.75 }
+      { "id": "far_range", "base_color": "#6f83a8", "snow_color": "#e6edf7", "sunlit_rim_color": "#f0c489", "defocus_blur_px_at_4k": 6 },
+      { "id": "mid_range", "base_color": "#46597d", "snow_color": "#c7d4e6", "defocus_blur_px_at_4k": 3 },
+      { "id": "near_hills", "base_color": "#2e3f5e", "defocus_blur_px_at_4k": 1.5 }
     ],
     "lake": {
       "water_colors": { "near_horizon": "#22334f", "foreground": "#101b2e" },
@@ -61,14 +61,14 @@
     "microphone": {
       "style": "modern studio condenser",
       "finish": "matte black",
-      "colors": { "body": "#101216", "grille": "#14171c", "sun_rim_light": "rgba(240,196,137,0.35)" },
+      "colors": { "body": "#101216", "grille": "#14171c", "accents": "#1a1d22", "sun_rim_light": "rgba(240,196,137,0.35)", "sky_specular": "rgba(190,210,235,0.18)" },
       "position_normalized": { "x": 0.5, "y": 0.63 }
     },
     "voice_waveform": {
       "role": "voice-activity indicator",
       "appearance": { "core_color": "#3fd8ff", "outer_color": "#2f8fff", "glow": { "color": "rgba(63,216,255,0.55)" } },
       "behavior": {
-        "amplitude_envelope": { "temporal_frequencies_hz": [0.1, 0.2, 0.3, 0.5], "floor": 0.12 },
+        "amplitude_envelope": { "temporal_frequencies_hz": [0.2, 0.3, 0.5], "floor": 0.12 },
         "carrier_waves": [
           { "spatial_cycles": 2.2, "temporal_frequency_hz": 0.7, "relative_amplitude": 1.0 },
           { "spatial_cycles": 4.7, "temporal_frequency_hz": 0.4, "relative_amplitude": 0.42 },
@@ -80,8 +80,8 @@
   "animations": [
     { "id": "camera_dolly_in", "keyframe_model": "zoom(t) = 1 + 0.005 * (1 - cos(2*pi*t/10))", "period_seconds": 10.0 },
     { "id": "mist_drift", "period_seconds": 10.0 },
-    { "id": "lake_ripples", "period_seconds_per_glint": [10.0, 5.0, 3.3333, 2.5] },
-    { "id": "tree_sway", "model": "0.008*sin(2*pi*2t/10 + phi) + 0.003*sin(2*pi*3t/10 + 2*phi)" },
+    { "id": "lake_ripples", "glint_frequencies_hz": [0.1, 0.2, 0.3, 0.4] },
+    { "id": "tree_sway", "model": "0.0064*sin(2*pi*2t/10 + phi) + 0.0023*sin(2*pi*3t/10 + 2*phi)" },
     { "id": "waveform_voice_pulse", "period_seconds": 10.0 },
     { "id": "sun_shimmer", "model": "1 + 0.03*sin(2*pi*2t/10)", "period_seconds": 5.0 }
   ],
@@ -200,9 +200,13 @@
     skyG.fillRect(0, 0, W, H);
   }
 
+  // Depth of field comes from the spec; blur values are given for the 4K
+  // master, and this preview's logical space is 1080p, hence the /2.
+  const dof = id => SPEC.background.mountains.find(m => m.id === id).defocus_blur_px_at_4k / 2;
+
   const [farC, farG] = layerCanvas();
   {
-    farG.filter = 'blur(3px)';                        // depth of field: farthest = softest
+    farG.filter = `blur(${dof('far_range')}px)`;      // farthest = softest
     farG.save();
     fillRidge(farG, farPts, 335, 545, '#e6edf7', '#6f83a8');
     rimLight(farG, farPts, 'rgba(240,196,137,0.55)', 2.5);
@@ -212,7 +216,7 @@
 
   const [midC, midG] = layerCanvas();
   {
-    midG.filter = 'blur(1.5px)';
+    midG.filter = `blur(${dof('mid_range')}px)`;
     fillRidge(midG, midPts, 472, 575, '#c7d4e6', '#46597d');
     rimLight(midG, midPts, 'rgba(240,196,137,0.30)', 2);
     midG.filter = 'none';
@@ -220,7 +224,7 @@
 
   const [nearC, nearG] = layerCanvas();
   {
-    nearG.filter = 'blur(0.75px)';
+    nearG.filter = `blur(${dof('near_hills')}px)`;
     fillRidge(nearG, nearPts, 592, 660, '#2e3f5e', '#243350');
     nearG.filter = 'none';
   }
@@ -318,8 +322,8 @@
 
   function drawTrees(g, t) {
     for (const tr of trees) {
-      const sway = 0.008 * Math.sin(TAU * 2 * t / DURATION + tr.phase)
-                 + 0.003 * Math.sin(TAU * 3 * t / DURATION + 2 * tr.phase);
+      const sway = 0.0064 * Math.sin(TAU * 2 * t / DURATION + tr.phase)
+                 + 0.0023 * Math.sin(TAU * 3 * t / DURATION + 2 * tr.phase);
       g.save();                                          // the tree itself
       g.translate(tr.x, tr.y);
       g.rotate(sway);
@@ -348,7 +352,7 @@
   function drawMist(g, t) {
     for (const m of mistBlobs) {
       const xOff = 25 * Math.sin(TAU * m.k * t / DURATION + m.phase);
-      const alpha = 0.11 + 0.05 * Math.sin(TAU * t / DURATION + m.phase * 1.7);
+      const alpha = 0.13 + 0.07 * Math.sin(TAU * t / DURATION + m.phase * 1.7);
       const cx = m.bx + xOff;
       const grad = g.createRadialGradient(cx, m.y, 0, cx, m.y, m.rx);
       grad.addColorStop(0, `rgba(214,226,240,${alpha.toFixed(3)})`);
@@ -546,7 +550,7 @@
     }
     // Soft cool specular from the sky, upper left.
     const spec = g.createRadialGradient(m.cx - 34, m.headTop + 62, 0, m.cx - 34, m.headTop + 62, 120);
-    spec.addColorStop(0, SPEC.foreground.microphone.colors.sky_specular || 'rgba(190,210,235,0.18)');
+    spec.addColorStop(0, SPEC.foreground.microphone.colors.sky_specular);
     spec.addColorStop(1, 'rgba(190,210,235,0)');
     g.fillStyle = spec;
     g.fillRect(hx, m.headTop, hw, hh);
@@ -572,6 +576,23 @@
     g.globalAlpha = 1;
   }
 
+  // The microphone never changes over time: render it once to a layer, and
+  // reuse that layer for the mic and its faint reflection in the lake.
+  const [micC, micG] = layerCanvas();
+  drawMicrophone(micG);
+
+  function drawMicLayer(g) {
+    g.save();
+    g.globalAlpha = 0.12;
+    g.filter = 'blur(2px)';
+    g.translate(0, MIC.baseY + 8);
+    g.scale(1, -0.35);
+    g.translate(0, -(MIC.baseY + 8));
+    g.drawImage(micC, 0, 0, W, H);
+    g.restore();
+    g.drawImage(micC, 0, 0, W, H);
+  }
+
   // ------------------------------------------------------------ waveform
   const WAVE = {
     cx: W / 2,
@@ -580,15 +601,15 @@
     samples: 192
   };
 
-  // Natural speech cadence: phrase-like swells with rests, exactly periodic over 10 s.
+  // Natural speech cadence: four phrase-like swells spread across the loop
+  // with clear rests between them, exactly periodic over 10 s.
   function voiceEnvelope(t) {
     const p = t / DURATION;
-    const m1 = 0.5 + 0.5 * Math.sin(TAU * 1 * p + 0.9);
-    const m2 = 0.5 + 0.5 * Math.sin(TAU * 2 * p + 4.1);
-    const m3 = 0.5 + 0.5 * Math.sin(TAU * 3 * p + 2.3);
-    const m5 = 0.5 + 0.5 * Math.sin(TAU * 5 * p + 5.6);
-    const raw = (0.35 * m1 + 0.65 * m2 * m3) * (0.6 + 0.4 * m5);
-    return 0.12 + 0.88 * smoothstep(0.14, 0.62, raw);
+    const m2 = 0.5 + 0.5 * Math.sin(TAU * 2 * p);
+    const m3 = 0.5 + 0.5 * Math.sin(TAU * 3 * p + 2.0);
+    const m5 = 0.5 + 0.5 * Math.sin(TAU * 5 * p + 4.4);
+    const raw = (0.45 * m2 + 0.55 * m3) * (0.55 + 0.45 * m5);
+    return 0.12 + 0.88 * smoothstep(0.16, 0.60, raw);
   }
 
   function waveY(u, t, env) {
@@ -626,11 +647,15 @@
     g.fillRect(-440, -440, 880, 880);
     g.restore();
 
+    // Stroke fades to fully transparent at both extremities so neither end
+    // of the wave terminates in a hard cut.
     const grad = g.createLinearGradient(WAVE.cx - WAVE.halfW, 0, WAVE.cx + WAVE.halfW, 0);
-    grad.addColorStop(0, app.outer_color);
+    grad.addColorStop(0, 'rgba(47,143,255,0)');
+    grad.addColorStop(0.08, app.outer_color);
     grad.addColorStop(0.3, app.core_color);
     grad.addColorStop(0.7, app.core_color);
-    grad.addColorStop(1, app.outer_color);
+    grad.addColorStop(0.92, app.outer_color);
+    grad.addColorStop(1, 'rgba(47,143,255,0)');
 
     g.save();
     g.lineCap = 'round';
@@ -696,7 +721,7 @@
     });
 
     withCam(ctx, z, px.foreground_factor, () => {
-      drawMicrophone(ctx);
+      drawMicLayer(ctx);
       drawWaveform(ctx, t);
     });
 
@@ -704,29 +729,50 @@
   }
 
   // --------------------------------------------------------------- loop
-  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let frozenTime = reduceMotion ? 2.5 : null;
-  const t0 = performance.now();
+  const motionQuery = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  let frozenTime = motionQuery && motionQuery.matches ? 2.5 : null;
+  let t0 = performance.now();
+  let rafId = 0;
+
+  // A single rAF chain: cancelling before every request means repeated
+  // setTime()/play() calls can never stack duplicate render loops.
+  function schedule() {
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(tick);
+  }
 
   function tick(now) {
-    const t = frozenTime !== null ? frozenTime % DURATION : ((now - t0) / 1000) % DURATION;
+    const t = frozenTime !== null ? frozenTime : ((now - t0) / 1000) % DURATION;
     render(t);
-    if (frozenTime === null) requestAnimationFrame(tick);
+    if (frozenTime === null) schedule();
   }
-  requestAnimationFrame(tick);
+  schedule();
 
   // Headless-testing hook (not a UI element): freeze or release the clock.
   window.__ANIM = {
     duration: DURATION,
     spec: SPEC,
-    setTime(t) { frozenTime = t; requestAnimationFrame(tick); },
+    setTime(t) {
+      const v = Number(t);
+      if (!Number.isFinite(v)) throw new RangeError('setTime expects a finite time in seconds');
+      frozenTime = ((v % DURATION) + DURATION) % DURATION;
+      schedule();
+    },
     play() {
       if (frozenTime !== null) {
+        t0 = performance.now() - frozenTime * 1000;   // resume from the frozen instant
         frozenTime = null;
-        requestAnimationFrame(tick);
+        schedule();
       }
     }
   };
+
+  if (motionQuery && motionQuery.addEventListener) {
+    motionQuery.addEventListener('change', e => {
+      if (e.matches) { frozenTime = 2.5; schedule(); }
+      else window.__ANIM.play();
+    });
+  }
 })();
 </script>
 </body>

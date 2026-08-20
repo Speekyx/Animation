@@ -154,6 +154,7 @@
       "position_normalized": { "x": 0.5, "y": 0.63 },
       "height_normalized": 0.56,
       "parts": ["pill-shaped capsule head with fine mesh grille", "cylindrical matte body", "slim stand rod", "low-profile round base"],
+      "reflection_in_lake": { "enabled": true, "opacity": 0.12, "softness": "blurred, vertically squashed" },
       "animation": "static — only the camera dolly and depth-of-field affect it"
     },
     "voice_waveform": {
@@ -180,7 +181,7 @@
         "description": "The wave pulses smoothly with a natural speech cadence — phrase-like swells separated by near-silent rests.",
         "amplitude_envelope": {
           "model": "product of low-frequency sinusoids shaped by a smoothstep gate",
-          "temporal_frequencies_hz": [0.1, 0.2, 0.3, 0.5],
+          "temporal_frequencies_hz": [0.2, 0.3, 0.5],
           "floor": 0.12,
           "attack_release": "always smooth, no hard cuts"
         },
@@ -220,7 +221,7 @@
       "id": "lake_ripples",
       "target": "background.lake.ripples",
       "property": ["glint_opacity", "glint_offset_x", "surface_undulation"],
-      "period_seconds_per_glint": [10.0, 5.0, 3.3333333333333335, 2.5],
+      "glint_frequencies_hz": [0.1, 0.2, 0.3, 0.4],
       "character": "sparse twinkling glints drifting slowly; brighter and warmer inside the sun's light column",
       "loop_safe": true
     },
@@ -228,8 +229,8 @@
       "id": "tree_sway",
       "target": "background.trees",
       "property": "rotation_about_base",
-      "model": "θ(t) = 0.008 · sin(2π · 2t/10 + φ_tree) + 0.003 · sin(2π · 3t/10 + 2φ_tree) radians",
-      "max_deflection_degrees": 0.63,
+      "model": "θ(t) = 0.0064 · sin(2π · 2t/10 + φ_tree) + 0.0023 · sin(2π · 3t/10 + 2φ_tree) radians",
+      "max_deflection_degrees": 0.5,
       "per_tree_phase": true,
       "character": "subtle, organic, non-synchronized",
       "loop_safe": true
@@ -238,9 +239,9 @@
       "id": "waveform_voice_pulse",
       "target": "foreground.voice_waveform",
       "property": "amplitude_envelope",
-      "model": "env(t) = 0.12 + 0.88 · smoothstep(0.18, 0.78, mix of sin(2π·k·t/10) terms, k ∈ {1,2,3,5})",
+      "model": "env(t) = 0.12 + 0.88 · smoothstep(0.16, 0.60, (0.45·sin₂ + 0.55·sin₃) · (0.55 + 0.45·sin₅)) with sin_k = 0.5 + 0.5·sin(2π·k·t/10)",
       "period_seconds": 10.0,
-      "character": "natural speech rhythm — swell, sustain, rest",
+      "character": "natural speech rhythm — four phrase-like swells spread across the loop, with rests between",
       "loop_safe": true
     },
     {
