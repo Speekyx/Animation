@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alpine Dawn — Microphone Cinematic Background</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #0b1220; }
+  canvas { display: block; width: 100vw; height: 100vh; object-fit: cover; }
+</style>
+</head>
+<body>
+<canvas id="stage" width="1920" height="1080"></canvas>
+
+<!-- Spécification complète de l'animation (source de vérité visualisée par le script ci-dessous) -->
+<script type="application/json" id="animation-spec">
+{
+  "project": {
+    "name": "Alpine Dawn — Microphone Cinematic Background",
+    "slug": "microphone-cinematic-animation",
+    "version": "1.0.0",
+    "usage": "application_background",
+    "duration_seconds": 10.0,
+    "frame_rate_fps": 60,
+    "total_frames": 600,
+    "resolution": { "width": 3840, "height": 2160, "label": "4K UHD" },
+    "aspect_ratio": "16:9",
+    "loop": {
+      "seamless": true,
+      "strategy": "Every animated parameter is a periodic function whose period divides exactly into 10 s (temporal frequencies are integer multiples of 0.1 Hz), so frame 600 is bit-identical to frame 0."
+    }
+  },
+  "scene": {
+    "title": "Alpine lake at sunrise",
+    "time_of_day": "sunrise",
+    "mood": ["minimalist", "calm", "premium", "focused"],
+    "composition": { "horizon_line_normalized_y": 0.611, "subject_anchor": "center" }
+  },
+  "environment": {
+    "atmosphere": { "mist": { "layers": 3, "opacity_range": [0.06, 0.2], "behavior": "very slow horizontal drift with gentle opacity breathing" } },
+    "lighting": { "key_light": { "source": "rising sun", "color_temperature_kelvin": 3200 }, "palette_strategy": "cool blues with restrained golden sunrise accents" },
+    "wind": { "speed_mps": 1.2, "affects": ["trees", "mist", "lake_surface"] }
+  },
+  "background": {
+    "sky": { "colors": { "zenith": "#16233f", "mid": "#4c6a9c", "horizon": "#f4c98a" } },
+    "sun": { "position_normalized": { "x": 0.62, "y": 0.435 }, "core_color": "#ffe9c4", "glow_color": "#f2b370" },
+    "mountains": [
+      { "id": "far_range", "base_color": "#6f83a8", "snow_color": "#e6edf7", "sunlit_rim_color": "#f0c489", "defocus_blur_px_at_4k": 6 },
+      { "id": "mid_range", "base_color": "#46597d", "snow_color": "#c7d4e6", "defocus_blur_px_at_4k": 3 },
+      { "id": "near_hills", "base_color": "#2e3f5e", "defocus_blur_px_at_4k": 1.5 }
+    ],
+    "lake": {
+      "water_colors": { "near_horizon": "#22334f", "foreground": "#101b2e" },
+      "reflections": { "opacity": 0.35, "vertical_squash": 0.6 },
+      "sun_light_column": { "color": "#e8b877", "opacity": 0.22 },
+      "ripples": { "glint_colors": ["#9fb8d8", "#e8b877"] }
+    },
+    "trees": { "color": "#16202f", "motion": "subtle wind sway, max ±0.5°", "reflection_in_lake": true }
+  },
+  "foreground": {
+    "microphone": {
+      "style": "modern studio condenser",
+      "finish": "matte black",
+      "colors": { "body": "#101216", "grille": "#14171c", "accents": "#1a1d22", "sun_rim_light": "rgba(240,196,137,0.35)", "sky_specular": "rgba(190,210,235,0.18)" },
+      "position_normalized": { "x": 0.5, "y": 0.63 }
+    },
+    "voice_waveform": {
+      "role": "voice-activity indicator",
+      "appearance": { "core_color": "#3fd8ff", "outer_color": "#2f8fff", "glow": { "color": "rgba(63,216,255,0.55)" } },
+      "behavior": {
+        "amplitude_envelope": { "temporal_frequencies_hz": [0.2, 0.3, 0.5], "floor": 0.12 },
+        "carrier_waves": [
+          { "spatial_cycles": 2.2, "temporal_frequency_hz": 0.7, "relative_amplitude": 1.0 },
+          { "spatial_cycles": 4.7, "temporal_frequency_hz": 0.4, "relative_amplitude": 0.42 },
+          { "spatial_cycles": 8.3, "temporal_frequency_hz": 0.9, "relative_amplitude": 0.2 }
+        ]
+      }
+    }
+  },
+  "animations": [
+    { "id": "camera_dolly_in", "keyframe_model": "zoom(t) = 1 + 0.005 * (1 - cos(2*pi*t/10))", "period_seconds": 10.0 },
+    { "id": "mist_drift", "period_seconds": 10.0 },
+    { "id": "lake_ripples", "glint_frequencies_hz": [0.1, 0.2, 0.3, 0.4] },
+    { "id": "tree_sway", "model": "0.0064*sin(2*pi*2t/10 + phi) + 0.0023*sin(2*pi*3t/10 + 2*phi)" },
+    { "id": "waveform_voice_pulse", "period_seconds": 10.0 },
+    { "id": "sun_shimmer", "model": "1 + 0.03*sin(2*pi*2t/10)", "period_seconds": 5.0 }
+  ],
+  "camera": {
+    "focal_length_mm": 50,
+    "movement": { "type": "dolly_in", "total_travel_percent": 1.0, "parallax": { "background_layers_factor": 0.65, "midground_factor": 1.0, "foreground_factor": 1.25 } },
+    "depth_of_field": { "enabled": true, "aperture_f_stop": 2.0, "focus_target": "microphone_capsule" }
+  },
+  "rendering": {
+    "style": "photorealistic",
+    "grade": { "look": "cool base with golden sunrise accents", "vignette": { "strength": 0.35 } }
+  },
+  "constraints": { "no_text": true, "no_logo": true, "no_ui_elements": true, "motion_budget": "subtle" }
+}
+</script>
+
+<script>
+(() => {
+  'use strict';
+
+  const SPEC = JSON.parse(document.getElementById('animation-spec').textContent);
+  const DURATION = SPEC.project.duration_seconds;           // 10 s
+  const TAU = Math.PI * 2;
+
+  const W = 1920, H = 1080;                                 // logical 16:9 space (4K master is 2x)
+  const HORIZON = Math.round(SPEC.scene.composition.horizon_line_normalized_y * H); // 660
+  const SUN = { x: SPEC.background.sun.position_normalized.x * W,                    // 1190.4
+                y: SPEC.background.sun.position_normalized.y * H };                  // 469.8
+
+  const canvas = document.getElementById('stage');
+  const S = Math.min(2, Math.max(1, window.devicePixelRatio || 1)); // internal supersampling
+  canvas.width = W * S;
+  canvas.height = H * S;
+  const ctx = canvas.getContext('2d');
+
+  // Deterministic RNG so every load renders the exact same scene.
+  function mulberry32(seed) {
+    let a = seed >>> 0;
+    return () => {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const smoothstep = (a, b, x) => {
+    const u = clamp((x - a) / (b - a), 0, 1);
+    return u * u * (3 - 2 * u);
+  };
+
+  function layerCanvas() {
+    const c = document.createElement('canvas');
+    c.width = W * S;
+    c.height = H * S;
+    const g = c.getContext('2d');
+    g.scale(S, S);
+    return [c, g];
+  }
+
+  // ---------------------------------------------------------------- terrain
+  function ridge(rng, baseY, step, jitter, lo, hi) {
+    const pts = [];
+    let y = baseY;
+    for (let x = -80; x <= W + 80; x += step) {
+      y = clamp(y + (rng() - 0.5) * jitter, lo, hi);
+      pts.push([x, y]);
+    }
+    return pts;
+  }
+
+  function fillRidge(g, pts, gradTopY, gradBotY, topColor, botColor) {
+    const grad = g.createLinearGradient(0, gradTopY, 0, gradBotY);
+    grad.addColorStop(0, topColor);
+    grad.addColorStop(1, botColor);
+    g.fillStyle = grad;
+    g.beginPath();
+    g.moveTo(pts[0][0], pts[0][1]);
+    for (const [x, y] of pts) g.lineTo(x, y);
+    g.lineTo(W + 80, H);
+    g.lineTo(-80, H);
+    g.closePath();
+    g.fill();
+  }
+
+  // Warm rim light on sun-facing (right-descending) slopes.
+  function rimLight(g, pts, color, width) {
+    g.strokeStyle = color;
+    g.lineWidth = width;
+    g.lineCap = 'round';
+    for (let i = 0; i < pts.length - 1; i++) {
+      if (pts[i + 1][1] > pts[i][1]) {
+        g.beginPath();
+        g.moveTo(pts[i][0], pts[i][1]);
+        g.lineTo(pts[i + 1][0], pts[i + 1][1]);
+        g.stroke();
+      }
+    }
+  }
+
+  const rng = mulberry32(20260820);
+  const farPts  = ridge(rng, 455, 46, 92, 335, 525);
+  const midPts  = ridge(rng, 550, 38, 62, 472, 602);
+  const nearPts = ridge(rng, 622, 30, 26, 592, 654);
+
+  // --------------------------------------------------- pre-rendered layers
+  const [skyC, skyG] = layerCanvas();
+  {
+    const c = SPEC.background.sky.colors;
+    const grad = skyG.createLinearGradient(0, 0, 0, HORIZON + 30);
+    grad.addColorStop(0, c.zenith);
+    grad.addColorStop(0.55, c.mid);
+    grad.addColorStop(1, c.horizon);
+    skyG.fillStyle = grad;
+    skyG.fillRect(0, 0, W, H);
+  }
+
+  // Depth of field comes from the spec; blur values are given for the 4K
+  // master, and this preview's logical space is 1080p, hence the /2.
+  const dof = id => SPEC.background.mountains.find(m => m.id === id).defocus_blur_px_at_4k / 2;
+
+  const [farC, farG] = layerCanvas();
+  {
+    farG.filter = `blur(${dof('far_range')}px)`;      // farthest = softest
+    farG.save();
+    fillRidge(farG, farPts, 335, 545, '#e6edf7', '#6f83a8');
+    rimLight(farG, farPts, 'rgba(240,196,137,0.55)', 2.5);
+    farG.restore();
+    farG.filter = 'none';
+  }
+
+  const [midC, midG] = layerCanvas();
+  {
+    midG.filter = `blur(${dof('mid_range')}px)`;
+    fillRidge(midG, midPts, 472, 575, '#c7d4e6', '#46597d');
+    rimLight(midG, midPts, 'rgba(240,196,137,0.30)', 2);
+    midG.filter = 'none';
+  }
+
+  const [nearC, nearG] = layerCanvas();
+  {
+    nearG.filter = `blur(${dof('near_hills')}px)`;
+    fillRidge(nearG, nearPts, 592, 660, '#2e3f5e', '#243350');
+    nearG.filter = 'none';
+  }
+
+  // Mirrored landscape in the lake, squashed and softened.
+  const [reflC, reflG] = layerCanvas();
+  {
+    reflG.save();
+    reflG.filter = 'blur(2.5px)';
+    reflG.translate(0, HORIZON);
+    reflG.scale(1, -SPEC.background.lake.reflections.vertical_squash);
+    reflG.translate(0, -HORIZON);
+    reflG.drawImage(skyC, 0, 0, W, H);
+    reflG.drawImage(farC, 0, 0, W, H);
+    reflG.drawImage(midC, 0, 0, W, H);
+    reflG.drawImage(nearC, 0, 0, W, H);
+    reflG.restore();
+    reflG.filter = 'none';
+    // The mirror only exists below the waterline.
+    reflG.save();
+    reflG.globalCompositeOperation = 'destination-in';
+    reflG.fillStyle = '#fff';
+    reflG.fillRect(0, HORIZON, W, H - HORIZON);
+    reflG.restore();
+  }
+
+  const [vigC, vigG] = layerCanvas();
+  {
+    const grad = vigG.createRadialGradient(W / 2, H / 2, H * 0.42, W / 2, H / 2, H * 1.02);
+    grad.addColorStop(0, 'rgba(6,10,20,0)');
+    grad.addColorStop(1, 'rgba(6,10,20,0.42)');
+    vigG.fillStyle = grad;
+    vigG.fillRect(0, 0, W, H);
+  }
+
+  // ------------------------------------------------------------- glints
+  const glints = [];
+  {
+    const grng = mulberry32(77123);
+    for (let i = 0; i < 78; i++) {
+      const d = grng();                                  // 0 near horizon → 1 near camera
+      const y = HORIZON + 12 + d * d * 330;
+      const x = grng() * W;
+      const columnHalf = 70 + d * 190;
+      glints.push({
+        x, y,
+        len: 12 + d * 46 + grng() * 22,
+        k: 1 + Math.floor(grng() * 4),                   // 1..4 cycles per loop
+        phase: grng() * TAU,
+        drift: 4 + d * 7,
+        warm: Math.abs(x - SUN.x) < columnHalf,
+        alpha: 0.05 + d * 0.13
+      });
+    }
+  }
+
+  // ------------------------------------------------------------- trees
+  const trees = [];
+  {
+    const trng = mulberry32(4451);
+    const cluster = (cx, count, hMin, hMax) => {
+      for (let i = 0; i < count; i++) {
+        trees.push({
+          x: cx + (trng() - 0.5) * 150,
+          y: HORIZON + 6 + trng() * 10,
+          h: hMin + trng() * (hMax - hMin),
+          phase: trng() * TAU
+        });
+      }
+    };
+    cluster(0.06 * W, 4, 86, 140);
+    cluster(0.92 * W, 3, 97, 151);
+  }
+
+  function drawPine(g, h) {
+    // Drawn with the base at (0,0), pointing up.
+    const wBase = h * 0.44;
+    g.fillStyle = 'rgba(20,26,38,0.9)';
+    g.fillRect(-h * 0.02, -h * 0.14, h * 0.04, h * 0.14);
+    g.fillStyle = SPEC.background.trees.color;
+    const tiers = 5;
+    for (let i = 0; i < tiers; i++) {
+      const f = i / tiers;
+      const tw = wBase * (1 - f * 0.72);
+      const yTop = -h * (0.32 + f * 0.68);
+      const yBot = -h * (0.10 + f * 0.60);
+      g.beginPath();
+      g.moveTo(0, yTop);
+      g.lineTo(tw / 2, yBot);
+      g.lineTo(-tw / 2, yBot);
+      g.closePath();
+      g.fill();
+    }
+  }
+
+  function drawTrees(g, t) {
+    for (const tr of trees) {
+      const sway = 0.0064 * Math.sin(TAU * 2 * t / DURATION + tr.phase)
+                 + 0.0023 * Math.sin(TAU * 3 * t / DURATION + 2 * tr.phase);
+      g.save();                                          // the tree itself
+      g.translate(tr.x, tr.y);
+      g.rotate(sway);
+      drawPine(g, tr.h);
+      g.restore();
+      g.save();                                          // its reflection
+      g.translate(tr.x, tr.y + 2);
+      g.scale(1, -0.55);
+      g.rotate(-sway);
+      g.globalAlpha = 0.22;
+      drawPine(g, tr.h);
+      g.restore();
+    }
+  }
+
+  // ------------------------------------------------------------- mist
+  const mistBlobs = [
+    { bx: 400,  y: 520, rx: 720, ry: 42, k: 1, phase: 0.0 },
+    { bx: 1330, y: 528, rx: 640, ry: 38, k: 1, phase: 2.1 },
+    { bx: 830,  y: 566, rx: 760, ry: 44, k: 1, phase: 3.4 },
+    { bx: 1710, y: 572, rx: 600, ry: 36, k: 1, phase: 4.9 },
+    { bx: 210,  y: 610, rx: 680, ry: 40, k: 1, phase: 1.2 },
+    { bx: 1080, y: 616, rx: 780, ry: 42, k: 1, phase: 5.6 }
+  ];
+
+  function drawMist(g, t) {
+    for (const m of mistBlobs) {
+      const xOff = 25 * Math.sin(TAU * m.k * t / DURATION + m.phase);
+      const alpha = 0.13 + 0.07 * Math.sin(TAU * t / DURATION + m.phase * 1.7);
+      const cx = m.bx + xOff;
+      const grad = g.createRadialGradient(cx, m.y, 0, cx, m.y, m.rx);
+      grad.addColorStop(0, `rgba(214,226,240,${alpha.toFixed(3)})`);
+      grad.addColorStop(1, 'rgba(214,226,240,0)');
+      g.save();
+      g.translate(cx, m.y);
+      g.scale(1, m.ry / m.rx);
+      g.translate(-cx, -m.y);
+      g.fillStyle = grad;
+      g.fillRect(cx - m.rx, m.y - m.rx, m.rx * 2, m.rx * 2);
+      g.restore();
+    }
+  }
+
+  // ------------------------------------------------------- water & light
+  function drawWater(g, t) {
+    const wc = SPEC.background.lake.water_colors;
+    const grad = g.createLinearGradient(0, HORIZON, 0, H);
+    grad.addColorStop(0, wc.near_horizon);
+    grad.addColorStop(1, wc.foreground);
+    g.fillStyle = grad;
+    g.fillRect(0, HORIZON, W, H - HORIZON);
+
+    g.globalAlpha = SPEC.background.lake.reflections.opacity;
+    g.drawImage(reflC, 0, 0, W, H);
+    g.globalAlpha = 1;
+
+    // Warm glow line where sky meets water.
+    const hl = g.createLinearGradient(SUN.x - 700, 0, SUN.x + 700, 0);
+    hl.addColorStop(0, 'rgba(242,179,112,0)');
+    hl.addColorStop(0.5, 'rgba(255,214,160,0.30)');
+    hl.addColorStop(1, 'rgba(242,179,112,0)');
+    g.fillStyle = hl;
+    g.fillRect(SUN.x - 700, HORIZON - 1.5, 1400, 3);
+
+    // The sun's shimmering light column.
+    const colAlpha = 0.22 * (0.88 + 0.12 * Math.sin(TAU * 3 * t / DURATION));
+    g.save();
+    g.translate(SUN.x, HORIZON + 175);
+    g.scale(1, 2.55);
+    const col = g.createRadialGradient(0, 0, 0, 0, 0, 105);
+    col.addColorStop(0, `rgba(232,184,119,${colAlpha.toFixed(3)})`);
+    col.addColorStop(1, 'rgba(232,184,119,0)');
+    g.fillStyle = col;
+    g.fillRect(-105, -105, 210, 210);
+    g.restore();
+
+    // Sparse specular glints, twinkling on loop-safe integer frequencies.
+    g.lineCap = 'round';
+    for (const gl of glints) {
+      const tw = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(TAU * gl.k * t / DURATION + gl.phase));
+      const x = gl.x + gl.drift * Math.sin(TAU * t / DURATION + gl.phase);
+      g.strokeStyle = gl.warm
+        ? `rgba(232,184,119,${(gl.alpha * tw * 1.5).toFixed(3)})`
+        : `rgba(159,184,216,${(gl.alpha * tw).toFixed(3)})`;
+      g.lineWidth = 1.6;
+      g.beginPath();
+      g.moveTo(x - gl.len / 2, gl.y);
+      g.lineTo(x + gl.len / 2, gl.y);
+      g.stroke();
+    }
+  }
+
+  function drawSun(g, t) {
+    const shimmer = 1 + 0.03 * Math.sin(TAU * 2 * t / DURATION);
+    // Broad atmospheric wash so the whole right sky warms toward dawn.
+    let grad = g.createRadialGradient(SUN.x, SUN.y, 0, SUN.x, SUN.y, 760);
+    grad.addColorStop(0, 'rgba(244,180,110,0.34)');
+    grad.addColorStop(0.5, 'rgba(238,166,104,0.14)');
+    grad.addColorStop(1, 'rgba(238,166,104,0)');
+    g.fillStyle = grad;
+    g.fillRect(SUN.x - 800, SUN.y - 800, 1600, 1600);
+    grad = g.createRadialGradient(SUN.x, SUN.y, 0, SUN.x, SUN.y, 290 * shimmer);
+    grad.addColorStop(0, 'rgba(250,190,115,0.78)');
+    grad.addColorStop(0.35, 'rgba(246,182,110,0.30)');
+    grad.addColorStop(1, 'rgba(246,182,110,0)');
+    g.fillStyle = grad;
+    g.fillRect(SUN.x - 320, SUN.y - 320, 640, 640);
+    grad = g.createRadialGradient(SUN.x, SUN.y, 0, SUN.x, SUN.y, 52);
+    grad.addColorStop(0, 'rgba(255,236,198,1)');
+    grad.addColorStop(0.45, 'rgba(255,214,150,0.85)');
+    grad.addColorStop(1, 'rgba(255,214,150,0)');
+    g.fillStyle = grad;
+    g.fillRect(SUN.x - 56, SUN.y - 56, 112, 112);
+  }
+
+  // Faint warm haze drawn over the ridges so the dawn light bleeds into the valley mist.
+  function drawSunHaze(g, t) {
+    const shimmer = 1 + 0.03 * Math.sin(TAU * 2 * t / DURATION);
+    const grad = g.createRadialGradient(SUN.x, SUN.y + 60, 0, SUN.x, SUN.y + 60, 560 * shimmer);
+    grad.addColorStop(0, 'rgba(244,180,110,0.16)');
+    grad.addColorStop(1, 'rgba(244,180,110,0)');
+    g.fillStyle = grad;
+    g.fillRect(SUN.x - 580, SUN.y - 520, 1160, 1160);
+  }
+
+  // ---------------------------------------------------------- microphone
+  const MIC = {
+    cx: W / 2,
+    headTop: 385, headBot: 655, headW: 164,
+    ringTop: 640, ringBot: 668,
+    bodyTop: 662, bodyBot: 858, bodyW: 118,
+    rodTop: 852, rodBot: 968, rodW: 15,
+    baseY: 972, baseRx: 128, baseRy: 21
+  };
+
+  function roundRectPath(g, x, y, w, h, r) {
+    g.beginPath();
+    g.moveTo(x + r, y);
+    g.arcTo(x + w, y, x + w, y + h, r);
+    g.arcTo(x + w, y + h, x, y + h, r);
+    g.arcTo(x, y + h, x, y, r);
+    g.arcTo(x, y, x + w, y, r);
+    g.closePath();
+  }
+
+  function drawMicrophone(g) {
+    const m = MIC;
+
+    // Contact shadow, then the low-profile base.
+    g.save();
+    g.translate(m.cx, m.baseY + 10);
+    g.scale(1, 0.16);
+    let sh = g.createRadialGradient(0, 0, 0, 0, 0, m.baseRx * 1.45);
+    sh.addColorStop(0, 'rgba(0,0,0,0.5)');
+    sh.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = sh;
+    g.fillRect(-m.baseRx * 1.5, -m.baseRx * 1.5, m.baseRx * 3, m.baseRx * 3);
+    g.restore();
+
+    let grad = g.createLinearGradient(m.cx - m.baseRx, 0, m.cx + m.baseRx, 0);
+    grad.addColorStop(0, '#0a0c0f');
+    grad.addColorStop(0.5, '#1c1f25');
+    grad.addColorStop(0.86, '#0d0f13');
+    grad.addColorStop(1, '#23201a');
+    g.fillStyle = grad;
+    g.beginPath();
+    g.ellipse(m.cx, m.baseY, m.baseRx, m.baseRy, 0, 0, TAU);
+    g.fill();
+    g.fillStyle = '#14161b';
+    g.beginPath();
+    g.ellipse(m.cx, m.baseY - 6, m.baseRx * 0.82, m.baseRy * 0.72, 0, 0, TAU);
+    g.fill();
+
+    // Stand rod.
+    grad = g.createLinearGradient(m.cx - m.rodW / 2, 0, m.cx + m.rodW / 2, 0);
+    grad.addColorStop(0, '#0a0c0f');
+    grad.addColorStop(0.45, '#22262d');
+    grad.addColorStop(1, '#101216');
+    g.fillStyle = grad;
+    g.fillRect(m.cx - m.rodW / 2, m.rodTop, m.rodW, m.rodBot - m.rodTop);
+
+    // Matte cylindrical body.
+    grad = g.createLinearGradient(m.cx - m.bodyW / 2, 0, m.cx + m.bodyW / 2, 0);
+    grad.addColorStop(0, '#0b0d10');
+    grad.addColorStop(0.38, '#1a1d22');
+    grad.addColorStop(0.62, '#15181d');
+    grad.addColorStop(0.93, '#0c0e11');
+    grad.addColorStop(1, '#191712');
+    g.fillStyle = grad;
+    roundRectPath(g, m.cx - m.bodyW / 2, m.bodyTop, m.bodyW, m.bodyBot - m.bodyTop, 16);
+    g.fill();
+
+    // Bezel ring joining head and body.
+    grad = g.createLinearGradient(m.cx - m.headW / 2, 0, m.cx + m.headW / 2, 0);
+    grad.addColorStop(0, '#0d0f12');
+    grad.addColorStop(0.4, '#23262c');
+    grad.addColorStop(1, '#101216');
+    g.fillStyle = grad;
+    roundRectPath(g, m.cx - m.headW / 2 - 5, m.ringTop, m.headW + 10, m.ringBot - m.ringTop, 9);
+    g.fill();
+
+    // Capsule head with fine mesh grille.
+    const hx = m.cx - m.headW / 2, hw = m.headW, hh = m.headBot - m.headTop;
+    grad = g.createLinearGradient(hx, 0, hx + hw, 0);
+    grad.addColorStop(0, '#0e1013');
+    grad.addColorStop(0.42, '#1e2126');
+    grad.addColorStop(0.8, '#111318');
+    grad.addColorStop(1, '#1c1a15');
+    g.fillStyle = grad;
+    roundRectPath(g, hx, m.headTop, hw, hh, hw / 2);
+    g.fill();
+
+    g.save();
+    roundRectPath(g, hx, m.headTop, hw, hh, hw / 2);
+    g.clip();
+    g.strokeStyle = 'rgba(0,0,0,0.38)';
+    g.lineWidth = 1;
+    for (let y = m.headTop + 5; y < m.headBot; y += 6.5) {
+      g.beginPath(); g.moveTo(hx, y); g.lineTo(hx + hw, y); g.stroke();
+    }
+    g.strokeStyle = 'rgba(255,255,255,0.045)';
+    for (let x = hx + 4; x < hx + hw; x += 6.5) {
+      g.beginPath(); g.moveTo(x, m.headTop); g.lineTo(x, m.headBot); g.stroke();
+    }
+    // Soft cool specular from the sky, upper left.
+    const spec = g.createRadialGradient(m.cx - 34, m.headTop + 62, 0, m.cx - 34, m.headTop + 62, 120);
+    spec.addColorStop(0, SPEC.foreground.microphone.colors.sky_specular);
+    spec.addColorStop(1, 'rgba(190,210,235,0)');
+    g.fillStyle = spec;
+    g.fillRect(hx, m.headTop, hw, hh);
+    g.restore();
+
+    // Golden rim light hugging the sun-facing right edge of the capsule.
+    g.strokeStyle = SPEC.foreground.microphone.colors.sun_rim_light;
+    g.lineWidth = 2;
+    g.beginPath();
+    g.arc(m.cx, m.headTop + hw / 2, hw / 2 - 1, -0.7, 0);
+    g.lineTo(m.cx + hw / 2 - 1, m.headBot - hw / 2);
+    g.arc(m.cx, m.headBot - hw / 2, hw / 2 - 1, 0, 0.5);
+    g.stroke();
+    g.beginPath();
+    g.moveTo(m.cx + m.bodyW / 2 - 1, m.bodyTop + 12);
+    g.lineTo(m.cx + m.bodyW / 2 - 1, m.bodyBot - 14);
+    g.stroke();
+    g.globalAlpha = 0.5;
+    g.beginPath();
+    g.moveTo(m.cx + m.rodW / 2 - 0.5, m.rodTop + 6);
+    g.lineTo(m.cx + m.rodW / 2 - 0.5, m.rodBot - 4);
+    g.stroke();
+    g.globalAlpha = 1;
+  }
+
+  // The microphone never changes over time: render it once to a layer, and
+  // reuse that layer for the mic and its faint reflection in the lake.
+  const [micC, micG] = layerCanvas();
+  drawMicrophone(micG);
+
+  function drawMicLayer(g) {
+    g.save();
+    g.globalAlpha = 0.12;
+    g.filter = 'blur(2px)';
+    g.translate(0, MIC.baseY + 8);
+    g.scale(1, -0.35);
+    g.translate(0, -(MIC.baseY + 8));
+    g.drawImage(micC, 0, 0, W, H);
+    g.restore();
+    g.drawImage(micC, 0, 0, W, H);
+  }
+
+  // ------------------------------------------------------------ waveform
+  const WAVE = {
+    cx: W / 2,
+    baseY: SPEC.foreground.voice_waveform && 0.815 * H,   // 880.2
+    halfW: 0.20 * W,                                      // total width 0.40 * W
+    samples: 192
+  };
+
+  // Natural speech cadence: four phrase-like swells spread across the loop
+  // with clear rests between them, exactly periodic over 10 s.
+  function voiceEnvelope(t) {
+    const p = t / DURATION;
+    const m2 = 0.5 + 0.5 * Math.sin(TAU * 2 * p);
+    const m3 = 0.5 + 0.5 * Math.sin(TAU * 3 * p + 2.0);
+    const m5 = 0.5 + 0.5 * Math.sin(TAU * 5 * p + 4.4);
+    const raw = (0.45 * m2 + 0.55 * m3) * (0.55 + 0.45 * m5);
+    return 0.12 + 0.88 * smoothstep(0.16, 0.60, raw);
+  }
+
+  function waveY(u, t, env) {
+    const p = t / DURATION;
+    const hann = 0.5 - 0.5 * Math.cos(TAU * u);
+    return env * hann * (
+      34 * Math.sin(TAU * (2.2 * u - 7 * p) + 0.5) +
+      14 * Math.sin(TAU * (4.7 * u + 4 * p) + 2.0) +
+      7  * Math.sin(TAU * (8.3 * u - 9 * p) + 4.2)
+    );
+  }
+
+  function tracePath(g, t, env, yScale) {
+    g.beginPath();
+    for (let i = 0; i <= WAVE.samples; i++) {
+      const u = i / WAVE.samples;
+      const x = WAVE.cx - WAVE.halfW + u * WAVE.halfW * 2;
+      const y = WAVE.baseY + waveY(u, t, env) * yScale;
+      if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
+    }
+  }
+
+  function drawWaveform(g, t) {
+    const env = voiceEnvelope(t);
+    const app = SPEC.foreground.voice_waveform.appearance;
+
+    // Soft light pool the wave casts on the water.
+    g.save();
+    g.translate(WAVE.cx, WAVE.baseY + 26);
+    g.scale(1, 0.14);
+    const pool = g.createRadialGradient(0, 0, 0, 0, 0, 430);
+    pool.addColorStop(0, `rgba(63,216,255,${(0.11 * env).toFixed(3)})`);
+    pool.addColorStop(1, 'rgba(63,216,255,0)');
+    g.fillStyle = pool;
+    g.fillRect(-440, -440, 880, 880);
+    g.restore();
+
+    // Stroke fades to fully transparent at both extremities so neither end
+    // of the wave terminates in a hard cut.
+    const grad = g.createLinearGradient(WAVE.cx - WAVE.halfW, 0, WAVE.cx + WAVE.halfW, 0);
+    grad.addColorStop(0, 'rgba(47,143,255,0)');
+    grad.addColorStop(0.08, app.outer_color);
+    grad.addColorStop(0.3, app.core_color);
+    grad.addColorStop(0.7, app.core_color);
+    grad.addColorStop(0.92, app.outer_color);
+    grad.addColorStop(1, 'rgba(47,143,255,0)');
+
+    g.save();
+    g.lineCap = 'round';
+    g.lineJoin = 'round';
+
+    // Faint mirrored trace beneath the main wave.
+    g.globalAlpha = 0.20;
+    g.strokeStyle = grad;
+    g.lineWidth = 2;
+    tracePath(g, t, env, -0.35);
+    g.stroke();
+
+    // Wide outer glow pass.
+    g.globalAlpha = 0.16;
+    g.shadowColor = app.glow.color;
+    g.shadowBlur = 26;
+    g.lineWidth = 8;
+    tracePath(g, t, env, 1);
+    g.stroke();
+
+    // Bright core pass.
+    g.globalAlpha = 0.95;
+    g.shadowBlur = 14;
+    g.lineWidth = 3;
+    g.stroke();
+    g.restore();
+  }
+
+  // ------------------------------------------------------------- camera
+  function zoom(t) {
+    return 1 + 0.005 * (1 - Math.cos(TAU * t / DURATION));   // 1.000 → 1.010 → 1.000
+  }
+
+  function withCam(g, z, parallaxFactor, draw) {
+    const s = 1 + (z - 1) * parallaxFactor;
+    g.save();
+    g.translate(W / 2, H / 2);
+    g.scale(s, s);
+    g.translate(-W / 2, -H / 2);
+    draw();
+    g.restore();
+  }
+
+  // -------------------------------------------------------------- frame
+  function render(t) {
+    ctx.setTransform(S, 0, 0, S, 0, 0);
+    const z = zoom(t);
+    const px = SPEC.camera.movement.parallax;
+
+    withCam(ctx, z, px.background_layers_factor, () => {
+      ctx.drawImage(skyC, 0, 0, W, H);
+      drawSun(ctx, t);
+      ctx.drawImage(farC, 0, 0, W, H);
+      ctx.drawImage(midC, 0, 0, W, H);
+      drawMist(ctx, t);
+      drawSunHaze(ctx, t);
+      ctx.drawImage(nearC, 0, 0, W, H);
+      drawWater(ctx, t);
+    });
+
+    withCam(ctx, z, px.midground_factor, () => {
+      drawTrees(ctx, t);
+    });
+
+    withCam(ctx, z, px.foreground_factor, () => {
+      drawMicLayer(ctx);
+      drawWaveform(ctx, t);
+    });
+
+    ctx.drawImage(vigC, 0, 0, W, H);
+  }
+
+  // --------------------------------------------------------------- loop
+  const motionQuery = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  let frozenTime = motionQuery && motionQuery.matches ? 2.5 : null;
+  let t0 = performance.now();
+  let rafId = 0;
+
+  // A single rAF chain: cancelling before every request means repeated
+  // setTime()/play() calls can never stack duplicate render loops.
+  function schedule() {
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function tick(now) {
+    const t = frozenTime !== null ? frozenTime : ((now - t0) / 1000) % DURATION;
+    render(t);
+    if (frozenTime === null) schedule();
+  }
+  schedule();
+
+  // Headless-testing hook (not a UI element): freeze or release the clock.
+  window.__ANIM = {
+    duration: DURATION,
+    spec: SPEC,
+    setTime(t) {
+      const v = Number(t);
+      if (!Number.isFinite(v)) throw new RangeError('setTime expects a finite time in seconds');
+      frozenTime = ((v % DURATION) + DURATION) % DURATION;
+      schedule();
+    },
+    play() {
+      if (frozenTime !== null) {
+        t0 = performance.now() - frozenTime * 1000;   // resume from the frozen instant
+        frozenTime = null;
+        schedule();
+      }
+    }
+  };
+
+  if (motionQuery && motionQuery.addEventListener) {
+    motionQuery.addEventListener('change', e => {
+      if (e.matches) { frozenTime = 2.5; schedule(); }
+      else window.__ANIM.play();
+    });
+  }
+})();
+</script>
+</body>
+</html>
