@@ -12,14 +12,21 @@
 <body>
 <canvas id="stage" width="1920" height="1080"></canvas>
 
-<!-- Spécification complète de l'animation (source de vérité visualisée par le script ci-dessous) -->
+<!--
+  Copie synchronisée de microphone-cinematic-animation.json (v3.1.0).
+  Quand la page est servie en HTTP(S), le fichier JSON externe est chargé et
+  remplace cette copie ; ouverte en file://, la copie embarquée (identique)
+  est utilisée. Le moteur de rendu lit ses paramètres dans ce JSON.
+-->
 <script type="application/json" id="animation-spec">
 {
   "project": {
-    "name": "Alpine Dawn — Microphone Cinematic Background",
+    "name": "Alpine Dawn — AI Voice Hero Background",
     "slug": "microphone-cinematic-animation",
-    "version": "1.0.0",
-    "usage": "application_background",
+    "version": "3.1.0",
+    "format": "cinematic-scene-json",
+    "description": "Photorealistic cinematic video background that reads as real camera footage from a luxury technology commercial: a genuine alpine lake at first light, thin fog drifting over mirror-calm water, layered mountains in natural haze, and a real-world premium studio microphone anchoring the foreground while an extremely subtle cyan-blue voice waveform breathes around it.",
+    "usage": "application_hero_background",
     "duration_seconds": 10.0,
     "frame_rate_fps": 60,
     "total_frames": 600,
@@ -27,97 +34,636 @@
     "aspect_ratio": "16:9",
     "loop": {
       "seamless": true,
-      "strategy": "Every animated parameter is a periodic function whose period divides exactly into 10 s (temporal frequencies are integer multiples of 0.1 Hz), so frame 600 is bit-identical to frame 0."
+      "strategy": "Every animated parameter is periodic with a period dividing exactly into 10 s (temporal frequencies are integer multiples of 0.1 Hz); particles travel closed orbital paths; grain and all post effects cycle with the loop, so frame 600 is bit-identical to frame 0.",
+      "loop_point_visibility": "invisible",
+      "perceived_repetition": "phase offsets are spread so that no sub-interval of the loop visibly repeats or mirrors itself — the full 10 s period is the only exact repetition"
     }
   },
+
+  "authenticity": {
+    "mandate": "The result must be indistinguishable from footage captured on a professional cinema camera in a real location. The viewer should immediately believe this was filmed, not made.",
+    "target_look": "luxury technology commercial filmed in the Alps — flagship product-film cinematography crossed with high-end nature-documentary photography; a frame extracted from a $500,000 commercial",
+    "photographic_cues": [
+      "true optical depth of field with distance-graded softness, never a uniform blur pass",
+      "natural sensor response: fine photochemical-style grain, soft highlight rolloff, no clipped whites",
+      "real-world surface imperfection everywhere: micro-scratches, dust, uneven rock, irregular treelines",
+      "asymmetric, irregular landscape forms — nothing procedurally repeated or mirrored",
+      "atmospheric depth built from genuine aerial perspective, not gradient overlays"
+    ],
+    "prohibited_look": [
+      "illustration", "stylized 3D", "CGI appearance", "low-poly or geometric mountains",
+      "vector graphics", "cartoon look", "artificial gradients", "fake sun", "fake reflections",
+      "simplistic microphone", "game-engine aesthetic", "excessive bloom", "excessive neon",
+      "flat lighting", "symmetrical artificial landscape", "generic stock footage", "UI-looking waveform"
+    ]
+  },
+
   "scene": {
-    "title": "Alpine lake at sunrise",
-    "time_of_day": "sunrise",
-    "mood": ["minimalist", "calm", "premium", "focused"],
-    "composition": { "horizon_line_normalized_y": 0.611, "subject_anchor": "center" }
+    "title": "Alpine lake at first light",
+    "location": "Real high-altitude alpine valley; the camera stands at the edge of a perfectly calm mountain lake",
+    "time_of_day": "first minutes after sunrise",
+    "season": "late_summer",
+    "mood": ["calm", "peaceful", "sophisticated", "premium", "intentional"],
+    "composition": {
+      "horizon_line_normalized_y": 0.611,
+      "subject_anchor": "center, slightly below the middle of the frame",
+      "rule": "The microphone is the visual anchor on the vertical centerline; the sun sits right of center (x ≈ 0.62); the landscape is naturally irregular, never symmetric.",
+      "negative_space": "Upper sky and lower lake surface stay visually quiet so interface content overlays legibly."
+    }
   },
+
   "environment": {
-    "atmosphere": { "mist": { "layers": 3, "opacity_range": [0.06, 0.2], "behavior": "very slow horizontal drift with gentle opacity breathing" } },
-    "lighting": { "key_light": { "source": "rising sun", "color_temperature_kelvin": 3200 }, "palette_strategy": "cool blues with restrained golden sunrise accents" },
-    "wind": { "speed_mps": 1.2, "affects": ["trees", "mist", "lake_surface"] }
+    "atmosphere": {
+      "clarity": "crisp mountain air with soft natural haze",
+      "haze_density": 0.12,
+      "atmospheric_perspective": {
+        "enabled": true,
+        "model": "physically based aerial perspective — each mountain layer loses contrast and saturation and lifts toward sky tone with distance, exactly as a long lens records it",
+        "layers": 3
+      },
+      "fog": {
+        "presence": true,
+        "form": "thin layer of morning fog moving slowly across the lake surface, with ragged natural edges",
+        "volumes": 3,
+        "altitude_band_normalized_y": [0.48, 0.6],
+        "opacity_range": [0.06, 0.2],
+        "behavior": "very slow horizontal drift with gentle density breathing; sunlight passes through it, producing subtle volumetric light"
+      },
+      "airborne_particles": {
+        "enabled": true,
+        "density": "sparse — tiny atmospheric motes",
+        "particle_size_mm": [0.2, 0.8],
+        "visibility": "only where low sunlight catches them",
+        "motion": "closed micro-orbits at integer loop frequencies, drift under 2 cm/s"
+      }
+    },
+    "sky": {
+      "condition": "clear dawn sky with natural luminance falloff",
+      "colors": { "zenith": "#16233f", "mid": "#4c6a9c", "horizon": "#f4c98a" },
+      "clouds": {
+        "coverage": 0.08,
+        "type": "high thin cirrus with irregular, wind-torn structure",
+        "motion": "extremely slow sinusoidal drift (±0.4% frame width at 0.1 Hz) so the loop point stays invisible"
+      }
+    },
+    "sun": {
+      "position_normalized": { "x": 0.62, "y": 0.435 },
+      "state": "low on the horizon, just clearing the far ridge, naturally diffused by mist — a real photographed sun, soft-edged, never a painted disc",
+      "core_color": "#ffe9c4",
+      "glow_color": "#f2b370"
+    },
+    "water": {
+      "body": "glacial mountain lake",
+      "surface_normalized_y_range": [0.611, 1.0],
+      "state": "perfectly calm",
+      "ripple_amplitude_cm": [0.5, 2],
+      "reflections": {
+        "character": "physically realistic mirror of mountains, sky, sun and trees, carrying tiny natural distortions from extremely subtle water movement — never a perfect flip",
+        "opacity": 0.35,
+        "vertical_squash": 0.6
+      }
+    },
+    "wind": {
+      "speed_mps": 1.0,
+      "gustiness": 0.15,
+      "affects": ["distant_pines", "foreground_vegetation", "fog_layer", "water_surface", "airborne_particles"]
+    }
   },
-  "background": {
-    "sky": { "colors": { "zenith": "#16233f", "mid": "#4c6a9c", "horizon": "#f4c98a" } },
-    "sun": { "position_normalized": { "x": 0.62, "y": 0.435 }, "core_color": "#ffe9c4", "glow_color": "#f2b370" },
-    "mountains": [
-      { "id": "far_range", "base_color": "#6f83a8", "snow_color": "#e6edf7", "sunlit_rim_color": "#f0c489", "defocus_blur_px_at_4k": 6 },
-      { "id": "mid_range", "base_color": "#46597d", "snow_color": "#c7d4e6", "defocus_blur_px_at_4k": 3 },
-      { "id": "near_hills", "base_color": "#2e3f5e", "defocus_blur_px_at_4k": 1.5 }
+
+  "assets": {
+    "mountain_layers": [
+      {
+        "id": "far_range",
+        "distance_km": 9,
+        "depth_normalized_y": 0.4,
+        "detail": "huge irregular ridgeline with natural rock formations, couloirs and snow patches following real accumulation logic; golden rim light on sun-facing slopes",
+        "material_ref": "snow_granite",
+        "aerial_perspective_strength": 0.55,
+        "defocus_blur_px_at_4k": 6
+      },
+      {
+        "id": "mid_range",
+        "distance_km": 5,
+        "depth_normalized_y": 0.5,
+        "detail": "overlapping shoulders with scree fields, patchy snow and thinning vegetation at altitude",
+        "material_ref": "alpine_rock",
+        "aerial_perspective_strength": 0.35,
+        "defocus_blur_px_at_4k": 3
+      },
+      {
+        "id": "near_hills",
+        "distance_km": 2.5,
+        "depth_normalized_y": 0.585,
+        "detail": "low forested shoreline hills with an uneven, natural treeline",
+        "material_ref": "forested_hillside",
+        "aerial_perspective_strength": 0.15,
+        "defocus_blur_px_at_4k": 1.5
+      }
     ],
     "lake": {
-      "water_colors": { "near_horizon": "#22334f", "foreground": "#101b2e" },
-      "reflections": { "opacity": 0.35, "vertical_squash": 0.6 },
-      "sun_light_column": { "color": "#e8b877", "opacity": 0.22 },
-      "ripples": { "glint_colors": ["#9fb8d8", "#e8b877"] }
+      "id": "glacial_lake",
+      "material_ref": "lake_water",
+      "shoreline": "natural gravel and stone at the camera position, mostly hidden below frame",
+      "features": ["mirror reflections with micro-distortion", "sun light column", "sparse specular glints"]
     },
-    "trees": { "color": "#16202f", "motion": "subtle wind sway, max ±0.5°", "reflection_in_lake": true }
-  },
-  "foreground": {
+    "distant_pines": {
+      "id": "shoreline_conifers",
+      "species": "alpine spruce and pine, mixed ages and heights",
+      "clusters": [
+        { "position_normalized_x": 0.06, "count": 4, "height_normalized_range": [0.08, 0.13] },
+        { "position_normalized_x": 0.92, "count": 3, "height_normalized_range": [0.09, 0.14] }
+      ],
+      "detail": "individually irregular silhouettes — broken branches, uneven tiers, no two alike",
+      "material_ref": "pine_foliage",
+      "motion": "very gentle morning-wind sway, max ±0.5° at the tip, per-tree phase offsets",
+      "reflection_in_lake": true
+    },
+    "foreground_vegetation": {
+      "id": "shoreline_grasses",
+      "form": "sparse alpine grasses and low sedge at the lower frame corners, softly out of focus",
+      "material_ref": "alpine_grass",
+      "motion": "occasional slight movement in the breeze — intermittent, never continuous",
+      "prominence": "peripheral only; must not compete with the microphone"
+    },
+    "fog_layer": {
+      "id": "morning_fog",
+      "count": 3,
+      "placement": "hugging the lake surface between mid_range and near_hills",
+      "material_ref": "volumetric_fog"
+    },
+    "atmospheric_particles": {
+      "id": "sunlit_motes",
+      "count": 180,
+      "region": "air within the volumetric light and around the microphone",
+      "material_ref": "dust_mote",
+      "loop_safe_paths": true
+    },
     "microphone": {
-      "style": "modern studio condenser",
-      "finish": "matte black",
-      "colors": { "body": "#101216", "grille": "#14171c", "accents": "#1a1d22", "sun_rim_light": "rgba(240,196,137,0.35)", "sky_specular": "rgba(190,210,235,0.18)" },
-      "position_normalized": { "x": 0.5, "y": 0.63 }
+      "id": "hero_microphone",
+      "role": "visual_anchor",
+      "style": "premium real-world large-diaphragm studio condenser, photographed product-true",
+      "finish": "matte black metal with fine brushed texture",
+      "position_normalized": { "x": 0.5, "y": 0.63 },
+      "height_normalized": 0.56,
+      "parts": [
+        { "name": "capsule_head", "detail": "pill-shaped head with a real woven wire grille — visible weave, physically accurate open structure", "material_ref": "mic_grille_mesh" },
+        { "name": "body", "detail": "cylindrical metal body with vertical brushing and machined tolerances", "material_ref": "mic_body_metal" },
+        { "name": "bezel_ring", "detail": "machined ring joining head and body with a fine chamfer", "material_ref": "mic_body_metal" },
+        { "name": "stand", "detail": "slim rod on a weighted low-profile round base", "material_ref": "mic_stand_metal" }
+      ],
+      "imperfections": "tiny real-world flaws — hairline micro-scratches, faint edge wear on the base rim, a few microscopic dust specks; nothing pristine or synthetic",
+      "shadows": "physically correct contact shadow and soft directional shadow from the low sun",
+      "proportions": "physically accurate to a real studio microphone; correct perspective at 50mm from camera height",
+      "focus": "extremely sharp — the focus plane is locked to the capsule while the mountains gradually soften with distance",
+      "reflection_in_lake": { "enabled": true, "opacity": 0.12, "softness": "blurred, vertically squashed, broken by ripples" },
+      "animation": "static — only camera motion, light and depth of field interact with it"
     },
     "voice_waveform": {
-      "role": "voice-activity indicator",
-      "appearance": { "core_color": "#3fd8ff", "outer_color": "#2f8fff", "glow": { "color": "rgba(63,216,255,0.55)" } },
+      "id": "voice_waveform",
+      "role": "physically integrated sound visualization",
+      "integration": "NOT a UI overlay — the microphone appears to emit a faint luminous visualization of detected sound that exists in the scene's air, wrapping around the microphone and interacting with its surfaces",
+      "geometry": {
+        "type": "sinusoidal_band_encircling_microphone",
+        "placement": "a slim horizontal band around the microphone at lower-body height, passing in front of the stand and slightly behind it, seen nearly edge-on",
+        "position_normalized": { "center_x": 0.5, "baseline_y": 0.815 },
+        "width_normalized": 0.4,
+        "depth_behavior": "the portion passing behind the microphone is dimmed and softly occluded",
+        "edge_window": "asymmetric taper — both ends fade to zero at slightly different rates, never mirror-symmetric"
+      },
+      "material_ref": "waveform_emissive",
       "behavior": {
-        "amplitude_envelope": { "temporal_frequencies_hz": [0.2, 0.3, 0.5], "floor": 0.12 },
+        "description": "Gently changes amplitude as if someone is speaking calmly — a natural, irregular speech pattern with swells, hesitations and rests.",
+        "amplitude_envelope": {
+          "model": "sum and product of low-frequency sinusoids shaped by a smoothstep gate, with scattered phases so the rhythm never feels metronomic",
+          "temporal_frequencies_hz": [0.1, 0.2, 0.3, 0.5, 0.7],
+          "floor": 0.12,
+          "attack_release": "always smooth, no hard cuts",
+          "irregularity": "phases and weights chosen so no two swells within the loop have the same shape; never perfectly repetitive, never perfectly symmetrical"
+        },
         "carrier_waves": [
-          { "spatial_cycles": 2.2, "temporal_frequency_hz": 0.7, "relative_amplitude": 1.0 },
-          { "spatial_cycles": 4.7, "temporal_frequency_hz": 0.4, "relative_amplitude": 0.42 },
-          { "spatial_cycles": 8.3, "temporal_frequency_hz": 0.9, "relative_amplitude": 0.2 }
-        ]
+          { "spatial_cycles": 2.2, "temporal_frequency_hz": 0.7, "relative_amplitude": 1.0, "direction": "leftward" },
+          { "spatial_cycles": 4.7, "temporal_frequency_hz": 0.4, "relative_amplitude": 0.42, "direction": "rightward" },
+          { "spatial_cycles": 8.3, "temporal_frequency_hz": 0.9, "relative_amplitude": 0.2, "direction": "leftward" }
+        ],
+        "restraint": "remains subtle and premium at all times; never dominates the landscape",
+        "loop_safe": true
       }
     }
   },
-  "animations": [
-    { "id": "camera_dolly_in", "keyframe_model": "zoom(t) = 1 + 0.005 * (1 - cos(2*pi*t/10))", "period_seconds": 10.0 },
-    { "id": "mist_drift", "period_seconds": 10.0 },
-    { "id": "lake_ripples", "glint_frequencies_hz": [0.1, 0.2, 0.3, 0.4] },
-    { "id": "tree_sway", "model": "0.0064*sin(2*pi*2t/10 + phi) + 0.0023*sin(2*pi*3t/10 + 2*phi)" },
-    { "id": "waveform_voice_pulse", "period_seconds": 10.0 },
-    { "id": "sun_shimmer", "model": "1 + 0.03*sin(2*pi*2t/10)", "period_seconds": 5.0 }
-  ],
+
+  "materials": {
+    "mic_body_metal": {
+      "model": "PBR metallic-roughness",
+      "base_color": "#101216",
+      "metallic": 1.0,
+      "roughness": 0.55,
+      "anisotropy": 0.6,
+      "anisotropy_direction": "vertical, aligned with the brushing",
+      "clearcoat": 0.08,
+      "clearcoat_roughness": 0.4,
+      "normal_detail": "fine brushed micro-scratches, subtle machining marks, microscopic surface waviness",
+      "imperfection_maps": "hairline scratches and faint smudge variation in roughness — real handled metal, not showroom-perfect",
+      "reflections": "subtle physically traced environment reflections — matte, never glossy"
+    },
+    "mic_grille_mesh": {
+      "model": "PBR metallic-roughness",
+      "base_color": "#14171c",
+      "metallic": 1.0,
+      "roughness": 0.45,
+      "geometry": "two crossed layers of actual woven steel wire with real depth and occlusion between layers",
+      "moire_mitigation": "supersampled to avoid aliasing at 4K"
+    },
+    "mic_stand_metal": {
+      "model": "PBR metallic-roughness",
+      "base_color": "#0e1013",
+      "metallic": 1.0,
+      "roughness": 0.5,
+      "detail": "matte powder-coat with faint edge wear on the base rim"
+    },
+    "lake_water": {
+      "model": "PBR dielectric",
+      "ior": 1.33,
+      "roughness_range": [0.02, 0.06],
+      "absorption_tint": "#0d2233",
+      "features": ["physically traced reflections", "refraction", "0.5–2 cm capillary ripple normals producing tiny natural reflection distortions"],
+      "colors": { "near_horizon": "#22334f", "foreground": "#101b2e" }
+    },
+    "snow_granite": {
+      "model": "PBR dielectric",
+      "snow": { "albedo": "#e6edf7", "subsurface_scattering_mm": 0.3, "roughness": 0.35, "distribution": "natural patches following gullies and shaded faces" },
+      "rock": { "albedo": "#6f83a8", "roughness": 0.8, "detail": "stratified granite with erosion patterns, never smooth or geometric" },
+      "sunlit_rim_color": "#f0c489"
+    },
+    "alpine_rock": {
+      "model": "PBR dielectric",
+      "albedo": "#46597d",
+      "snow_patches_albedo": "#c7d4e6",
+      "roughness": 0.8,
+      "detail": "scree, ledges and sparse high-altitude vegetation breaking up the surface"
+    },
+    "forested_hillside": {
+      "model": "PBR dielectric",
+      "albedo": "#2e3f5e",
+      "roughness": 0.9,
+      "detail": "dense conifer canopy with irregular gaps and height variation"
+    },
+    "pine_foliage": {
+      "model": "PBR dielectric with translucency",
+      "albedo": "#16202f",
+      "needle_translucency": 0.25,
+      "roughness": 0.75,
+      "backlight_response": "warm glow through needle edges facing the sun"
+    },
+    "alpine_grass": {
+      "model": "PBR dielectric with translucency",
+      "albedo": "#243426",
+      "translucency": 0.35,
+      "detail": "thin irregular blades, rendered soft by the shallow depth of field"
+    },
+    "volumetric_fog": {
+      "model": "heterogeneous participating medium",
+      "scattering_albedo": 0.95,
+      "phase_anisotropy_g": 0.6,
+      "density": "thin, with ragged procedural falloff — natural fog structure, never a uniform plane",
+      "tint": "#d6e2f0"
+    },
+    "dust_mote": {
+      "model": "forward-scattering point particle",
+      "visibility": "bright only against the volumetric light, invisible in shadow",
+      "size_variation": 0.6
+    },
+    "waveform_emissive": {
+      "model": "soft volumetric emissive",
+      "core_color": "#3fd8ff",
+      "edge_color": "#2f8fff",
+      "gradient": "cyan core blending to blue at the extremities, desaturated slightly by the filmic grade so it sits inside the scene's palette",
+      "emission_intensity": "faint — reads as luminous air, never as a graphic; no neon",
+      "casts_light": true,
+      "light_spill": {
+        "targets": ["microphone body", "water surface below"],
+        "character": "very subtle cyan reflection on the nearby microphone surface, modulated by the speech envelope",
+        "max_contribution": 0.08,
+        "follows_envelope": true
+      },
+      "mirror_trace": { "enabled": true, "opacity": 0.18, "vertical_flip": true, "distortion": "broken subtly by water ripples" }
+    }
+  },
+
+  "lighting": {
+    "key_light": {
+      "source": "the real rising sun",
+      "color_temperature_kelvin": 3200,
+      "elevation_degrees": 4,
+      "direction": "low on the horizon, from screen-right of center",
+      "quality": "soft — naturally diffused by atmosphere and mist",
+      "produces": ["warm sunlight on the edges of the microphone", "long soft shadows", "golden highlights on peaks, fog and water"]
+    },
+    "fill_light": {
+      "source": "blue sky dome",
+      "color_temperature_kelvin": 9500,
+      "intensity_relative_to_key": 0.55,
+      "produces": "cool blue shadows in the mountains and soft ambient fill"
+    },
+    "volumetric_light": {
+      "enabled": true,
+      "source": "sunlight passing naturally through the mountain mist",
+      "phase_anisotropy_g": 0.6,
+      "intensity": "subtle — present, never theatrical",
+      "shimmer": "±3% intensity breathing at 0.2 Hz, loop-safe"
+    },
+    "practical_light": {
+      "source": "voice_waveform emissive",
+      "effect": "faint cyan spill onto the microphone body and water, modulated by the speech envelope"
+    },
+    "rim_light": {
+      "target": "hero_microphone",
+      "color": "rgba(240, 196, 137, 0.35)",
+      "motivation": "physically motivated by the low sun behind camera-right",
+      "coverage": "thin warm edge along the capsule and body's sun-facing side"
+    },
+    "global_illumination": "physically realistic multi-bounce — sky bounce into shadows, warm ground bounce near sunlit rock",
+    "exposure": {
+      "mode": "natural HDR",
+      "strategy": "protect the sun-core with soft cinematic highlight rolloff while holding shadow detail; no exaggerated glow anywhere",
+      "flicker": "none"
+    },
+    "lens_flare": "only when physically appropriate — a restrained veiling glare as the sun grazes the frame edge of the lens; never a stylized flare element",
+    "palette_strategy": "natural colors: deep blue shadows, warm golden highlights, everything slightly desaturated toward a filmic neutral"
+  },
+
   "camera": {
-    "focal_length_mm": 50,
-    "movement": { "type": "dolly_in", "total_travel_percent": 1.0, "parallax": { "background_layers_factor": 0.65, "midground_factor": 1.0, "foreground_factor": 1.25 } },
-    "depth_of_field": { "enabled": true, "aperture_f_stop": 2.0, "focus_target": "microphone_capsule" }
+    "body": "professional full-frame cinema camera",
+    "sensor_mm": { "width": 36, "height": 24 },
+    "position": "at the lake edge, lens at microphone height",
+    "lens": {
+      "focal_length_mm": 50,
+      "type": "spherical cinema prime with natural optical character",
+      "aperture": "T2.0",
+      "focus_distance": "locked to the microphone capsule",
+      "depth_of_field": "large realistic optical falloff — the microphone is extremely sharp and the mountains gradually soften with distance, layer by layer",
+      "focus_breathing": {
+        "enabled": true,
+        "model": "field of view oscillates ±0.15% sinusoidally at 0.1 Hz",
+        "character": "subtle lens breathing, as on a real cinema prime"
+      },
+      "natural_characteristics": ["gentle field curvature", "mild corner softness wide open", "smooth focus rolloff", "0.2% barrel distortion"],
+      "bokeh": "smooth optical discs, slight cat-eye toward frame edges"
+    },
+    "movement": {
+      "type": "dolly_push_in",
+      "total_travel_percent": 1.0,
+      "profile": "cosine round trip (1.000 → 1.010 → 1.000) so the loop point stays invisible",
+      "feel": "expensive, calm and intentional — professional dolly, almost imperceptible",
+      "micro_drift": {
+        "enabled": true,
+        "model": "per-axis sum of two sinusoids (0.2 Hz and 0.3 Hz) with phase offsets, amplitude ≤ 0.02% of frame width",
+        "character": "microscopic stabilized drift — a supported camera breathing, never shake, never handheld wobble"
+      },
+      "exclusions": ["no artificial camera shake", "no drone movement", "no dramatic movement", "no sudden movements"],
+      "parallax": {
+        "background_layers_factor": 0.65,
+        "midground_factor": 1.0,
+        "foreground_factor": 1.25
+      }
+    },
+    "shutter_angle_degrees": 180
   },
+
+  "animations": [
+    {
+      "id": "camera_push_in",
+      "target": "camera",
+      "property": "zoom",
+      "keyframe_model": "zoom(t) = 1 + 0.005 * (1 - cos(2π * t / 10))",
+      "period_seconds": 10.0,
+      "amplitude": "1% total (1.000 → 1.010 → 1.000)",
+      "easing": "cosine ease-in-out",
+      "loop_safe": true
+    },
+    {
+      "id": "focus_breathing",
+      "target": "camera.lens",
+      "property": "field_of_view",
+      "model": "fov(t) = fov0 * (1 + 0.0015 * sin(2π * t / 10))",
+      "period_seconds": 10.0,
+      "loop_safe": true
+    },
+    {
+      "id": "camera_micro_drift",
+      "target": "camera",
+      "property": ["offset_x", "offset_y"],
+      "model": "per axis: 0.0002 * W * (sin(2π * 2t/10 + φ_axis) + 0.6 * sin(2π * 3t/10 + 2φ_axis))",
+      "period_seconds": 10.0,
+      "character": "microscopic, sub-pixel at viewing distance",
+      "loop_safe": true
+    },
+    {
+      "id": "fog_drift",
+      "target": "assets.fog_layer",
+      "property": ["offset_x", "density"],
+      "period_seconds": 10.0,
+      "drift_amplitude_normalized_x": 0.013,
+      "density_breathing_amplitude": 0.05,
+      "phase_offsets_per_volume_radians": [0.0, 2.1, 4.2],
+      "character": "slow fog movement across the lake surface, barely perceptible",
+      "loop_safe": true
+    },
+    {
+      "id": "cloud_drift",
+      "target": "environment.sky.clouds",
+      "property": "offset_x",
+      "model": "0.004 * W * sin(2π * t / 10)",
+      "period_seconds": 10.0,
+      "character": "extremely slow high-altitude drift",
+      "loop_safe": true
+    },
+    {
+      "id": "water_micro_ripples",
+      "target": "assets.lake",
+      "property": ["surface_normal_undulation", "glint_opacity", "glint_offset_x", "reflection_distortion"],
+      "period_seconds_per_component": [10.0, 5.0, 3.3333333333333335, 2.5],
+      "character": "extremely subtle ripples that gently disturb the reflections; sparse glints, warmer inside the sun's light column",
+      "loop_safe": true
+    },
+    {
+      "id": "distant_tree_sway",
+      "target": "assets.distant_pines",
+      "property": "rotation_about_base",
+      "model": "θ(t) = 0.008 * sin(2π * 2t/10 + φ_tree) + 0.003 * sin(2π * 3t/10 + 2φ_tree) radians",
+      "max_deflection_degrees": 0.63,
+      "per_tree_phase": true,
+      "character": "gentle distant movement in the morning wind, non-synchronized",
+      "loop_safe": true
+    },
+    {
+      "id": "foreground_vegetation_stir",
+      "target": "assets.foreground_vegetation",
+      "property": "blade_bend",
+      "model": "smooth gusts gated by 0.5 + 0.5*sin(2π * t/10 + φ_blade), peak deflection 1.5°, long still intervals between stirs",
+      "period_seconds": 10.0,
+      "character": "occasional slight movement, mostly at rest",
+      "loop_safe": true
+    },
+    {
+      "id": "particle_orbits",
+      "target": "assets.atmospheric_particles",
+      "property": "position",
+      "model": "closed orbits — per particle: A_x sin(2π k_x t/10 + φ), A_y sin(2π k_y t/10 + ψ) with integer k",
+      "period_seconds": 10.0,
+      "character": "tiny motes drifting through the volumetric light",
+      "loop_safe": true
+    },
+    {
+      "id": "waveform_voice_pulse",
+      "target": "assets.voice_waveform",
+      "property": "amplitude_envelope",
+      "model": "env(t) = 0.12 + 0.88 * smoothstep(0.14, 0.62, weighted mix of sin(2π·k·t/10 + φ_k) terms, k ∈ {1,2,3,5,7}, phases scattered)",
+      "period_seconds": 10.0,
+      "character": "calm speech — irregular swells, hesitations and rests; no two swells alike within the loop",
+      "loop_safe": true
+    },
+    {
+      "id": "sun_shimmer",
+      "target": "environment.sun",
+      "property": "glow_intensity",
+      "model": "1 + 0.03 * sin(2π * 2t/10)",
+      "period_seconds": 5.0,
+      "character": "imperceptible warmth breathing shared by the volumetric light",
+      "loop_safe": true
+    }
+  ],
+
   "rendering": {
-    "style": "photorealistic",
-    "grade": { "look": "cool base with golden sunrise accents", "vignette": { "strength": 0.35 } }
+    "style": "photorealistic — must read as captured footage, never as a render",
+    "pipeline": "physically based rendering throughout, spectral where available",
+    "engine_hints": [
+      "unbiased path tracing with full global illumination",
+      "physically traced reflections and refraction on water and metal",
+      "volumetric integration for fog, light shafts and atmospheric haze",
+      "denoiser tuned to preserve micro-detail before grain is re-applied in post"
+    ],
+    "detail_level": "ultra-high — grille weave, brushed-metal micro-scratches, rock strata and needle clusters all resolve at 4K",
+    "anti_synthetic_measures": [
+      "no repeated textures or instanced patterns visible at 4K",
+      "no perfectly straight ridgelines or evenly spaced trees",
+      "highlight and shadow behavior driven by physical light transport only"
+    ],
+    "motion_blur": { "enabled": true, "shutter_angle_degrees": 180 },
+    "anti_aliasing": "supersampling or high-sample temporal AA, no edge crawl",
+    "color_pipeline": {
+      "working_space": "ACEScg",
+      "output": "Rec.709 / sRGB display-referred SDR master, HDR-ready grade"
+    },
+    "output": {
+      "container": "mp4 or webm",
+      "codec_recommendations": ["H.265 Main10", "VP9", "AV1"],
+      "target_bitrate_mbps_4k": 28,
+      "alpha_channel": false
+    },
+    "performance_notes": "Designed as an app background: low temporal complexity, no flashing, large quiet regions compress efficiently and loop losslessly."
   },
-  "constraints": { "no_text": true, "no_logo": true, "no_ui_elements": true, "motion_budget": "subtle" }
+
+  "post_processing": {
+    "bloom": {
+      "enabled": true,
+      "character": "restrained physical halation on true highlights only — sun core, brightest glints, waveform core",
+      "threshold": "high",
+      "intensity": 0.18,
+      "note": "no exaggerated glow"
+    },
+    "lens_effects": {
+      "veiling_glare": "subtle warm glare near the sun, physically motivated only",
+      "chromatic_aberration": 0.04,
+      "distortion": "0.2% barrel, cinema-prime typical",
+      "bokeh_treatment": "optical — smooth discs, slight cat-eye at edges, no synthetic shapes"
+    },
+    "tone_mapping": {
+      "curve": "soft filmic contrast with gentle cinematic highlight rolloff",
+      "black_point": "lifted a touch — deep blue shadows retain detail"
+    },
+    "color_grade": {
+      "look": "premium cinematic: deep blue shadows, warm golden highlights, neutral mids",
+      "saturation": "slightly desaturated filmic look; oversaturation avoided everywhere, including the waveform",
+      "dynamic_range": "high — natural HDR feel within an SDR master",
+      "consistency": "grade is static across the loop — only light animates"
+    },
+    "vignette": { "enabled": true, "strength": 0.3, "softness": "wide, optical falloff" },
+    "film_grain": {
+      "enabled": true,
+      "intensity": 0.015,
+      "size": "fine 4K-scaled photochemical grain",
+      "loop_safe": "grain pattern cycles with the 10 s loop"
+    },
+    "sharpening": "none beyond capture sharpness — the lens does the work",
+    "overlays": "none — no text, no watermarks, no UI"
+  },
+
+  "constraints": {
+    "no_text": true,
+    "no_logos": true,
+    "no_ui_elements": true,
+    "no_people": true,
+    "no_animals": true,
+    "avoid": [
+      "illustration", "stylized 3D", "CGI appearance", "low-poly mountains", "geometric mountains",
+      "vector graphics", "cartoon look", "artificial gradients", "fake sun", "fake reflections",
+      "simplistic microphone", "game-engine aesthetic", "excessive bloom", "excessive neon",
+      "flat lighting", "symmetrical artificial landscape", "generic stock footage", "UI-looking waveform"
+    ],
+    "aesthetic": "calm, peaceful, sophisticated, premium — a luxury commercial frame",
+    "motion_budget": "everything moves almost invisibly and naturally slowly; nothing distracts from interface content overlaid on top",
+    "flash_safety": "no strobing or rapid luminance changes",
+    "loop_requirement": "mathematically seamless and visually invisible at exactly 10.000 s",
+    "overlay_readiness": "quiet upper and lower thirds; the microphone is the only strong focal point"
+  }
 }
 </script>
 
 <script>
-(() => {
+(async () => {
   'use strict';
 
-  const SPEC = JSON.parse(document.getElementById('animation-spec').textContent);
-  const DURATION = SPEC.project.duration_seconds;           // 10 s
-  const TAU = Math.PI * 2;
+  // ------------------------------------------------------ spec resolution
+  let SPEC = JSON.parse(document.getElementById('animation-spec').textContent);
+  try {
+    const res = await fetch('microphone-cinematic-animation.json', { cache: 'no-store' });
+    if (res.ok) SPEC = await res.json();
+  } catch (_) { /* file:// — la copie embarquée fait foi */ }
 
-  const W = 1920, H = 1080;                                 // logical 16:9 space (4K master is 2x)
-  const HORIZON = Math.round(SPEC.scene.composition.horizon_line_normalized_y * H); // 660
-  const SUN = { x: SPEC.background.sun.position_normalized.x * W,                    // 1190.4
-                y: SPEC.background.sun.position_normalized.y * H };                  // 469.8
+  const get = (path, fallback) => {
+    const v = path.split('.').reduce((o, k) => (o && o[k] !== undefined) ? o[k] : undefined, SPEC);
+    return v === undefined ? fallback : v;
+  };
+  const anim = id => (SPEC.animations || []).find(a => a.id === id) || {};
+
+  const TAU = Math.PI * 2;
+  const W = 1920, H = 1080;                               // espace logique 16:9 (le master 4K est à 2x)
+
+  const DURATION = get('project.duration_seconds', 10);
+  const HORIZON = Math.round(get('scene.composition.horizon_line_normalized_y', 0.611) * H);
+  const SUNP = get('environment.sun.position_normalized', { x: 0.62, y: 0.435 });
+  const SUN = { x: SUNP.x * W, y: SUNP.y * H };
+
+  const SKY = get('environment.sky.colors', { zenith: '#16233f', mid: '#4c6a9c', horizon: '#f4c98a' });
+  const WATER = get('materials.lake_water.colors', { near_horizon: '#22334f', foreground: '#101b2e' });
+  const REFL_OPACITY = get('environment.water.reflections.opacity', 0.35);
+  const REFL_SQUASH = get('environment.water.reflections.vertical_squash', 0.6);
+  const TREE_COLOR = get('materials.pine_foliage.albedo', '#16202f');
+  const RIM_COLOR = get('lighting.rim_light.color', 'rgba(240, 196, 137, 0.35)');
+  const PARALLAX = get('camera.movement.parallax',
+    { background_layers_factor: 0.65, midground_factor: 1.0, foreground_factor: 1.25 });
+  const DOLLY_HALF = get('camera.movement.total_travel_percent', 1.0) / 200; // 1% → ±0.005
+  const BREATHING = get('camera.lens.focus_breathing.enabled', true);
+  const MICRO_DRIFT = get('camera.movement.micro_drift.enabled', true);
+  const VIGNETTE = get('post_processing.vignette.strength', 0.3);
 
   const canvas = document.getElementById('stage');
-  const S = Math.min(2, Math.max(1, window.devicePixelRatio || 1)); // internal supersampling
+  const S = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
   canvas.width = W * S;
   canvas.height = H * S;
   const ctx = canvas.getContext('2d');
 
-  // Deterministic RNG so every load renders the exact same scene.
+  // RNG déterministe : chaque chargement rend exactement la même scène.
   function mulberry32(seed) {
     let a = seed >>> 0;
     return () => {
@@ -143,7 +689,7 @@
     return [c, g];
   }
 
-  // ---------------------------------------------------------------- terrain
+  // ---------------------------------------------------------------- relief
   function ridge(rng, baseY, step, jitter, lo, hi) {
     const pts = [];
     let y = baseY;
@@ -168,7 +714,7 @@
     g.fill();
   }
 
-  // Warm rim light on sun-facing (right-descending) slopes.
+  // Liseré doré sur les pentes exposées au soleil (descendantes vers la droite).
   function rimLight(g, pts, color, width) {
     g.strokeStyle = color;
     g.lineWidth = width;
@@ -188,54 +734,76 @@
   const midPts  = ridge(rng, 550, 38, 62, 472, 602);
   const nearPts = ridge(rng, 622, 30, 26, 592, 654);
 
-  // --------------------------------------------------- pre-rendered layers
+  // ----------------------------------------------------- couches statiques
   const [skyC, skyG] = layerCanvas();
   {
-    const c = SPEC.background.sky.colors;
     const grad = skyG.createLinearGradient(0, 0, 0, HORIZON + 30);
-    grad.addColorStop(0, c.zenith);
-    grad.addColorStop(0.55, c.mid);
-    grad.addColorStop(1, c.horizon);
+    grad.addColorStop(0, SKY.zenith);
+    grad.addColorStop(0.55, SKY.mid);
+    grad.addColorStop(1, SKY.horizon);
     skyG.fillStyle = grad;
     skyG.fillRect(0, 0, W, H);
   }
 
-  // Depth of field comes from the spec; blur values are given for the 4K
-  // master, and this preview's logical space is 1080p, hence the /2.
-  const dof = id => SPEC.background.mountains.find(m => m.id === id).defocus_blur_px_at_4k / 2;
+  // Cirrus fins pré-rendus (drift sinusoïdal au rendu).
+  const [cloudC, cloudG] = layerCanvas();
+  {
+    const crng = mulberry32(3307);
+    const groups = [[350, 140], [1150, 108], [1650, 190]];
+    for (const [gx, gy] of groups) {
+      const n = 4 + Math.floor(crng() * 3);
+      for (let i = 0; i < n; i++) {
+        const cx = gx + (crng() - 0.5) * 320;
+        const cy = gy + (crng() - 0.5) * 34;
+        const rx = 120 + crng() * 150;
+        const ry = 8 + crng() * 10;
+        const a = 0.03 + crng() * 0.045;
+        const grad = cloudG.createRadialGradient(cx, cy, 0, cx, cy, rx);
+        grad.addColorStop(0, `rgba(223,232,244,${a.toFixed(3)})`);
+        grad.addColorStop(1, 'rgba(223,232,244,0)');
+        cloudG.save();
+        cloudG.translate(cx, cy);
+        cloudG.scale(1, ry / rx);
+        cloudG.translate(-cx, -cy);
+        cloudG.fillStyle = grad;
+        cloudG.fillRect(cx - rx, cy - rx, rx * 2, rx * 2);
+        cloudG.restore();
+      }
+    }
+  }
 
   const [farC, farG] = layerCanvas();
   {
-    farG.filter = `blur(${dof('far_range')}px)`;      // farthest = softest
-    farG.save();
-    fillRidge(farG, farPts, 335, 545, '#e6edf7', '#6f83a8');
+    farG.filter = 'blur(3px)';                    // profondeur de champ : le plus loin = le plus doux
+    fillRidge(farG, farPts, 335, 545, get('materials.snow_granite.snow.albedo', '#e6edf7'),
+              get('materials.snow_granite.rock.albedo', '#6f83a8'));
     rimLight(farG, farPts, 'rgba(240,196,137,0.55)', 2.5);
-    farG.restore();
     farG.filter = 'none';
   }
 
   const [midC, midG] = layerCanvas();
   {
-    midG.filter = `blur(${dof('mid_range')}px)`;
-    fillRidge(midG, midPts, 472, 575, '#c7d4e6', '#46597d');
+    midG.filter = 'blur(1.5px)';
+    fillRidge(midG, midPts, 472, 575, get('materials.alpine_rock.snow_patches_albedo', '#c7d4e6'),
+              get('materials.alpine_rock.albedo', '#46597d'));
     rimLight(midG, midPts, 'rgba(240,196,137,0.30)', 2);
     midG.filter = 'none';
   }
 
   const [nearC, nearG] = layerCanvas();
   {
-    nearG.filter = `blur(${dof('near_hills')}px)`;
-    fillRidge(nearG, nearPts, 592, 660, '#2e3f5e', '#243350');
+    nearG.filter = 'blur(0.75px)';
+    fillRidge(nearG, nearPts, 592, 660, get('materials.forested_hillside.albedo', '#2e3f5e'), '#243350');
     nearG.filter = 'none';
   }
 
-  // Mirrored landscape in the lake, squashed and softened.
+  // Paysage réfléchi dans le lac, écrasé et adouci.
   const [reflC, reflG] = layerCanvas();
   {
     reflG.save();
     reflG.filter = 'blur(2.5px)';
     reflG.translate(0, HORIZON);
-    reflG.scale(1, -SPEC.background.lake.reflections.vertical_squash);
+    reflG.scale(1, -REFL_SQUASH);
     reflG.translate(0, -HORIZON);
     reflG.drawImage(skyC, 0, 0, W, H);
     reflG.drawImage(farC, 0, 0, W, H);
@@ -243,7 +811,6 @@
     reflG.drawImage(nearC, 0, 0, W, H);
     reflG.restore();
     reflG.filter = 'none';
-    // The mirror only exists below the waterline.
     reflG.save();
     reflG.globalCompositeOperation = 'destination-in';
     reflG.fillStyle = '#fff';
@@ -255,24 +822,26 @@
   {
     const grad = vigG.createRadialGradient(W / 2, H / 2, H * 0.42, W / 2, H / 2, H * 1.02);
     grad.addColorStop(0, 'rgba(6,10,20,0)');
-    grad.addColorStop(1, 'rgba(6,10,20,0.42)');
+    grad.addColorStop(1, `rgba(6,10,20,${(1.2 * VIGNETTE).toFixed(3)})`);
     vigG.fillStyle = grad;
     vigG.fillRect(0, 0, W, H);
   }
 
-  // ------------------------------------------------------------- glints
+  // ------------------------------------------------------------- reflets
   const glints = [];
   {
     const grng = mulberry32(77123);
+    const ks = (anim('water_micro_ripples').period_seconds_per_component || [10, 5, 10 / 3, 2.5])
+      .map(p => Math.max(1, Math.round(10 / p)));
     for (let i = 0; i < 78; i++) {
-      const d = grng();                                  // 0 near horizon → 1 near camera
+      const d = grng();
       const y = HORIZON + 12 + d * d * 330;
       const x = grng() * W;
       const columnHalf = 70 + d * 190;
       glints.push({
         x, y,
         len: 12 + d * 46 + grng() * 22,
-        k: 1 + Math.floor(grng() * 4),                   // 1..4 cycles per loop
+        k: ks[Math.floor(grng() * ks.length)],
         phase: grng() * TAU,
         drift: 4 + d * 7,
         warm: Math.abs(x - SUN.x) < columnHalf,
@@ -281,30 +850,73 @@
     }
   }
 
-  // ------------------------------------------------------------- trees
+  // ---------------------------------------------------- poussières éclairées
+  const motes = [];
+  {
+    const mrng = mulberry32(9911);
+    const count = Math.min(200, get('assets.atmospheric_particles.count', 180));
+    for (let i = 0; i < count; i++) {
+      const nearColumn = mrng() < 0.55;
+      const x0 = nearColumn ? SUN.x + (mrng() - 0.5) * 340 : 640 + mrng() * 860;
+      const y0 = 480 + mrng() * 470;
+      motes.push({
+        x0, y0,
+        ax: 5 + mrng() * 11,
+        ay: 4 + mrng() * 8,
+        kx: 1 + Math.floor(mrng() * 2),
+        ky: 1 + Math.floor(mrng() * 2),
+        ka: 1 + Math.floor(mrng() * 4),
+        p1: mrng() * TAU,
+        p2: mrng() * TAU,
+        p3: mrng() * TAU,
+        r: 0.5 + mrng() * 0.8,
+        warm: Math.abs(x0 - SUN.x) < 180,
+        alpha: 0.04 + mrng() * 0.1
+      });
+    }
+  }
+
+  function drawMotes(g, t) {
+    const p = t / DURATION;
+    for (const m of motes) {
+      const x = m.x0 + m.ax * Math.sin(TAU * m.kx * p + m.p1);
+      const y = m.y0 + m.ay * Math.sin(TAU * m.ky * p + m.p2);
+      const tw = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(TAU * m.ka * p + m.p3));
+      g.fillStyle = m.warm
+        ? `rgba(240,208,160,${(m.alpha * tw).toFixed(3)})`
+        : `rgba(200,216,236,${(m.alpha * tw * 0.7).toFixed(3)})`;
+      g.beginPath();
+      g.arc(x, y, m.r, 0, TAU);
+      g.fill();
+    }
+  }
+
+  // -------------------------------------------------------------- arbres
   const trees = [];
   {
     const trng = mulberry32(4451);
-    const cluster = (cx, count, hMin, hMax) => {
-      for (let i = 0; i < count; i++) {
+    const clusters = get('assets.distant_pines.clusters', [
+      { position_normalized_x: 0.06, count: 4, height_normalized_range: [0.08, 0.13] },
+      { position_normalized_x: 0.92, count: 3, height_normalized_range: [0.09, 0.14] }
+    ]);
+    for (const cl of clusters) {
+      const [hMin, hMax] = cl.height_normalized_range;
+      for (let i = 0; i < cl.count; i++) {
         trees.push({
-          x: cx + (trng() - 0.5) * 150,
+          x: cl.position_normalized_x * W + (trng() - 0.5) * 150,
           y: HORIZON + 6 + trng() * 10,
-          h: hMin + trng() * (hMax - hMin),
+          h: (hMin + trng() * (hMax - hMin)) * H,
           phase: trng() * TAU
         });
       }
-    };
-    cluster(0.06 * W, 4, 86, 140);
-    cluster(0.92 * W, 3, 97, 151);
+    }
   }
 
   function drawPine(g, h) {
-    // Drawn with the base at (0,0), pointing up.
     const wBase = h * 0.44;
     g.fillStyle = 'rgba(20,26,38,0.9)';
     g.fillRect(-h * 0.02, -h * 0.14, h * 0.04, h * 0.14);
-    g.fillStyle = SPEC.background.trees.color;
+    g.fillStyle = TREE_COLOR;
     const tiers = 5;
     for (let i = 0; i < tiers; i++) {
       const f = i / tiers;
@@ -322,14 +934,14 @@
 
   function drawTrees(g, t) {
     for (const tr of trees) {
-      const sway = 0.0064 * Math.sin(TAU * 2 * t / DURATION + tr.phase)
-                 + 0.0023 * Math.sin(TAU * 3 * t / DURATION + 2 * tr.phase);
-      g.save();                                          // the tree itself
+      const sway = 0.008 * Math.sin(TAU * 2 * t / DURATION + tr.phase)
+                 + 0.003 * Math.sin(TAU * 3 * t / DURATION + 2 * tr.phase);
+      g.save();
       g.translate(tr.x, tr.y);
       g.rotate(sway);
       drawPine(g, tr.h);
       g.restore();
-      g.save();                                          // its reflection
+      g.save();
       g.translate(tr.x, tr.y + 2);
       g.scale(1, -0.55);
       g.rotate(-sway);
@@ -339,23 +951,29 @@
     }
   }
 
-  // ------------------------------------------------------------- mist
-  const mistBlobs = [
-    { bx: 400,  y: 520, rx: 720, ry: 42, k: 1, phase: 0.0 },
-    { bx: 1330, y: 528, rx: 640, ry: 38, k: 1, phase: 2.1 },
-    { bx: 830,  y: 566, rx: 760, ry: 44, k: 1, phase: 3.4 },
-    { bx: 1710, y: 572, rx: 600, ry: 36, k: 1, phase: 4.9 },
-    { bx: 210,  y: 610, rx: 680, ry: 40, k: 1, phase: 1.2 },
-    { bx: 1080, y: 616, rx: 780, ry: 42, k: 1, phase: 5.6 }
+  // ------------------------------------------------------------- brouillard
+  const fogPhases = anim('fog_drift').phase_offsets_per_volume_radians || [0.0, 2.1, 4.2];
+  const fogOpacity = get('environment.atmosphere.fog.opacity_range', [0.06, 0.2]);
+  const fogDriftPx = (anim('fog_drift').drift_amplitude_normalized_x || 0.013) * W;
+  const fogBreath = anim('fog_drift').density_breathing_amplitude || 0.05;
+  const fogBlobs = [
+    { bx: 400,  y: 520, rx: 720, ry: 42, band: 0, phase: 0.0 },
+    { bx: 1330, y: 528, rx: 640, ry: 38, band: 0, phase: 2.1 },
+    { bx: 830,  y: 566, rx: 760, ry: 44, band: 1, phase: 3.4 },
+    { bx: 1710, y: 572, rx: 600, ry: 36, band: 1, phase: 4.9 },
+    { bx: 210,  y: 610, rx: 680, ry: 40, band: 2, phase: 1.2 },
+    { bx: 1080, y: 616, rx: 780, ry: 42, band: 2, phase: 5.6 }
   ];
+  const fogBase = (fogOpacity[0] + fogOpacity[1]) / 2 * 0.85;
 
-  function drawMist(g, t) {
-    for (const m of mistBlobs) {
-      const xOff = 25 * Math.sin(TAU * m.k * t / DURATION + m.phase);
-      const alpha = 0.13 + 0.07 * Math.sin(TAU * t / DURATION + m.phase * 1.7);
+  function drawFog(g, t) {
+    for (const m of fogBlobs) {
+      const ph = fogPhases[m.band % fogPhases.length] + m.phase * 0.3;
+      const xOff = fogDriftPx * Math.sin(TAU * t / DURATION + ph);
+      const alpha = fogBase + fogBreath * Math.sin(TAU * t / DURATION + m.phase * 1.7);
       const cx = m.bx + xOff;
       const grad = g.createRadialGradient(cx, m.y, 0, cx, m.y, m.rx);
-      grad.addColorStop(0, `rgba(214,226,240,${alpha.toFixed(3)})`);
+      grad.addColorStop(0, `rgba(214,226,240,${Math.max(0, alpha).toFixed(3)})`);
       grad.addColorStop(1, 'rgba(214,226,240,0)');
       g.save();
       g.translate(cx, m.y);
@@ -367,20 +985,18 @@
     }
   }
 
-  // ------------------------------------------------------- water & light
+  // --------------------------------------------------------- eau & lumière
   function drawWater(g, t) {
-    const wc = SPEC.background.lake.water_colors;
     const grad = g.createLinearGradient(0, HORIZON, 0, H);
-    grad.addColorStop(0, wc.near_horizon);
-    grad.addColorStop(1, wc.foreground);
+    grad.addColorStop(0, WATER.near_horizon);
+    grad.addColorStop(1, WATER.foreground);
     g.fillStyle = grad;
     g.fillRect(0, HORIZON, W, H - HORIZON);
 
-    g.globalAlpha = SPEC.background.lake.reflections.opacity;
+    g.globalAlpha = REFL_OPACITY;
     g.drawImage(reflC, 0, 0, W, H);
     g.globalAlpha = 1;
 
-    // Warm glow line where sky meets water.
     const hl = g.createLinearGradient(SUN.x - 700, 0, SUN.x + 700, 0);
     hl.addColorStop(0, 'rgba(242,179,112,0)');
     hl.addColorStop(0.5, 'rgba(255,214,160,0.30)');
@@ -388,7 +1004,6 @@
     g.fillStyle = hl;
     g.fillRect(SUN.x - 700, HORIZON - 1.5, 1400, 3);
 
-    // The sun's shimmering light column.
     const colAlpha = 0.22 * (0.88 + 0.12 * Math.sin(TAU * 3 * t / DURATION));
     g.save();
     g.translate(SUN.x, HORIZON + 175);
@@ -400,7 +1015,6 @@
     g.fillRect(-105, -105, 210, 210);
     g.restore();
 
-    // Sparse specular glints, twinkling on loop-safe integer frequencies.
     g.lineCap = 'round';
     for (const gl of glints) {
       const tw = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(TAU * gl.k * t / DURATION + gl.phase));
@@ -418,7 +1032,6 @@
 
   function drawSun(g, t) {
     const shimmer = 1 + 0.03 * Math.sin(TAU * 2 * t / DURATION);
-    // Broad atmospheric wash so the whole right sky warms toward dawn.
     let grad = g.createRadialGradient(SUN.x, SUN.y, 0, SUN.x, SUN.y, 760);
     grad.addColorStop(0, 'rgba(244,180,110,0.34)');
     grad.addColorStop(0.5, 'rgba(238,166,104,0.14)');
@@ -439,7 +1052,7 @@
     g.fillRect(SUN.x - 56, SUN.y - 56, 112, 112);
   }
 
-  // Faint warm haze drawn over the ridges so the dawn light bleeds into the valley mist.
+  // Halo chaud par-dessus les crêtes : l'aube déborde dans la vallée.
   function drawSunHaze(g, t) {
     const shimmer = 1 + 0.03 * Math.sin(TAU * 2 * t / DURATION);
     const grad = g.createRadialGradient(SUN.x, SUN.y + 60, 0, SUN.x, SUN.y + 60, 560 * shimmer);
@@ -449,9 +1062,9 @@
     g.fillRect(SUN.x - 580, SUN.y - 520, 1160, 1160);
   }
 
-  // ---------------------------------------------------------- microphone
+  // ------------------------------------------------------------ microphone
   const MIC = {
-    cx: W / 2,
+    cx: get('assets.microphone.position_normalized.x', 0.5) * W,
     headTop: 385, headBot: 655, headW: 164,
     ringTop: 640, ringBot: 668,
     bodyTop: 662, bodyBot: 858, bodyW: 118,
@@ -471,12 +1084,13 @@
 
   function drawMicrophone(g) {
     const m = MIC;
+    const bodyColor = get('materials.mic_body_metal.base_color', '#101216');
+    const grilleColor = get('materials.mic_grille_mesh.base_color', '#14171c');
 
-    // Contact shadow, then the low-profile base.
     g.save();
     g.translate(m.cx, m.baseY + 10);
     g.scale(1, 0.16);
-    let sh = g.createRadialGradient(0, 0, 0, 0, 0, m.baseRx * 1.45);
+    const sh = g.createRadialGradient(0, 0, 0, 0, 0, m.baseRx * 1.45);
     sh.addColorStop(0, 'rgba(0,0,0,0.5)');
     sh.addColorStop(1, 'rgba(0,0,0,0)');
     g.fillStyle = sh;
@@ -497,15 +1111,13 @@
     g.ellipse(m.cx, m.baseY - 6, m.baseRx * 0.82, m.baseRy * 0.72, 0, 0, TAU);
     g.fill();
 
-    // Stand rod.
     grad = g.createLinearGradient(m.cx - m.rodW / 2, 0, m.cx + m.rodW / 2, 0);
     grad.addColorStop(0, '#0a0c0f');
     grad.addColorStop(0.45, '#22262d');
-    grad.addColorStop(1, '#101216');
+    grad.addColorStop(1, bodyColor);
     g.fillStyle = grad;
     g.fillRect(m.cx - m.rodW / 2, m.rodTop, m.rodW, m.rodBot - m.rodTop);
 
-    // Matte cylindrical body.
     grad = g.createLinearGradient(m.cx - m.bodyW / 2, 0, m.cx + m.bodyW / 2, 0);
     grad.addColorStop(0, '#0b0d10');
     grad.addColorStop(0.38, '#1a1d22');
@@ -516,16 +1128,14 @@
     roundRectPath(g, m.cx - m.bodyW / 2, m.bodyTop, m.bodyW, m.bodyBot - m.bodyTop, 16);
     g.fill();
 
-    // Bezel ring joining head and body.
     grad = g.createLinearGradient(m.cx - m.headW / 2, 0, m.cx + m.headW / 2, 0);
     grad.addColorStop(0, '#0d0f12');
     grad.addColorStop(0.4, '#23262c');
-    grad.addColorStop(1, '#101216');
+    grad.addColorStop(1, bodyColor);
     g.fillStyle = grad;
     roundRectPath(g, m.cx - m.headW / 2 - 5, m.ringTop, m.headW + 10, m.ringBot - m.ringTop, 9);
     g.fill();
 
-    // Capsule head with fine mesh grille.
     const hx = m.cx - m.headW / 2, hw = m.headW, hh = m.headBot - m.headTop;
     grad = g.createLinearGradient(hx, 0, hx + hw, 0);
     grad.addColorStop(0, '#0e1013');
@@ -539,6 +1149,10 @@
     g.save();
     roundRectPath(g, hx, m.headTop, hw, hh, hw / 2);
     g.clip();
+    g.fillStyle = grilleColor;
+    g.globalAlpha = 0.35;
+    g.fillRect(hx, m.headTop, hw, hh);
+    g.globalAlpha = 1;
     g.strokeStyle = 'rgba(0,0,0,0.38)';
     g.lineWidth = 1;
     for (let y = m.headTop + 5; y < m.headBot; y += 6.5) {
@@ -548,16 +1162,15 @@
     for (let x = hx + 4; x < hx + hw; x += 6.5) {
       g.beginPath(); g.moveTo(x, m.headTop); g.lineTo(x, m.headBot); g.stroke();
     }
-    // Soft cool specular from the sky, upper left.
     const spec = g.createRadialGradient(m.cx - 34, m.headTop + 62, 0, m.cx - 34, m.headTop + 62, 120);
-    spec.addColorStop(0, SPEC.foreground.microphone.colors.sky_specular);
+    spec.addColorStop(0, 'rgba(190,210,235,0.18)');
     spec.addColorStop(1, 'rgba(190,210,235,0)');
     g.fillStyle = spec;
     g.fillRect(hx, m.headTop, hw, hh);
     g.restore();
 
-    // Golden rim light hugging the sun-facing right edge of the capsule.
-    g.strokeStyle = SPEC.foreground.microphone.colors.sun_rim_light;
+    // Liseré doré épousant le bord droit, côté soleil.
+    g.strokeStyle = RIM_COLOR;
     g.lineWidth = 2;
     g.beginPath();
     g.arc(m.cx, m.headTop + hw / 2, hw / 2 - 1, -0.7, 0);
@@ -576,107 +1189,145 @@
     g.globalAlpha = 1;
   }
 
-  // The microphone never changes over time: render it once to a layer, and
-  // reuse that layer for the mic and its faint reflection in the lake.
+  // Micro pré-rendu une fois, plus son reflet écrasé et flouté dans le lac.
   const [micC, micG] = layerCanvas();
   drawMicrophone(micG);
 
-  function drawMicLayer(g) {
-    g.save();
-    g.globalAlpha = 0.12;
-    g.filter = 'blur(2px)';
-    g.translate(0, MIC.baseY + 8);
-    g.scale(1, -0.35);
-    g.translate(0, -(MIC.baseY + 8));
-    g.drawImage(micC, 0, 0, W, H);
-    g.restore();
-    g.drawImage(micC, 0, 0, W, H);
+  const MIC_REFL = get('assets.microphone.reflection_in_lake', { enabled: true, opacity: 0.12 });
+  const [micReflC, micReflG] = layerCanvas();
+  if (MIC_REFL.enabled) {
+    micReflG.save();
+    micReflG.filter = 'blur(3px)';
+    micReflG.translate(0, MIC.baseY);
+    micReflG.scale(1, -0.22);
+    micReflG.translate(0, -MIC.baseY);
+    micReflG.drawImage(micC, 0, 0, W, H);
+    micReflG.restore();
+    micReflG.filter = 'none';
+    micReflG.save();
+    micReflG.globalCompositeOperation = 'destination-in';
+    micReflG.fillStyle = '#fff';
+    micReflG.fillRect(0, MIC.baseY + 6, W, H - MIC.baseY - 6);
+    micReflG.restore();
   }
 
-  // ------------------------------------------------------------ waveform
+  // -------------------------------------------------------------- onde vocale
   const WAVE = {
-    cx: W / 2,
-    baseY: SPEC.foreground.voice_waveform && 0.815 * H,   // 880.2
-    halfW: 0.20 * W,                                      // total width 0.40 * W
+    cx: get('assets.voice_waveform.geometry.position_normalized.center_x', 0.5) * W,
+    baseY: get('assets.voice_waveform.geometry.position_normalized.baseline_y', 0.815) * H,
+    halfW: get('assets.voice_waveform.geometry.width_normalized', 0.4) * W / 2,
     samples: 192
   };
+  const WAVE_CORE = get('materials.waveform_emissive.core_color', '#3fd8ff');
+  const WAVE_EDGE = get('materials.waveform_emissive.edge_color', '#2f8fff');
+  const WAVE_GLOW = 'rgba(63,216,255,0.55)';
+  const MIRROR_OPACITY = get('materials.waveform_emissive.mirror_trace.opacity', 0.18);
+  const SPILL_MAX = get('materials.waveform_emissive.light_spill.max_contribution', 0.08);
+  const ENV_FLOOR = get('assets.voice_waveform.behavior.amplitude_envelope.floor', 0.12);
 
-  // Natural speech cadence: four phrase-like swells spread across the loop
-  // with clear rests between them, exactly periodic over 10 s.
+  // Rythme de parole : phases dispersées pour qu'aucune montée ne ressemble à
+  // une autre dans la boucle — seule la période complète de 10 s se répète.
+  const ENV_K = get('assets.voice_waveform.behavior.amplitude_envelope.temporal_frequencies_hz',
+    [0.1, 0.2, 0.3, 0.5, 0.7]).map(f => Math.max(1, Math.round(f * 10)));
+  const ENV_PH = [0.9, 4.1, 2.3, 5.6, 1.7, 3.2, 0.4, 5.0];
+  const ENV_W  = [0.30, 0.24, 0.20, 0.15, 0.11, 0.08, 0.06, 0.05];
+
   function voiceEnvelope(t) {
     const p = t / DURATION;
-    const m2 = 0.5 + 0.5 * Math.sin(TAU * 2 * p);
-    const m3 = 0.5 + 0.5 * Math.sin(TAU * 3 * p + 2.0);
-    const m5 = 0.5 + 0.5 * Math.sin(TAU * 5 * p + 4.4);
-    const raw = (0.45 * m2 + 0.55 * m3) * (0.55 + 0.45 * m5);
-    return 0.12 + 0.88 * smoothstep(0.16, 0.60, raw);
+    let raw = 0, wsum = 0;
+    for (let i = 0; i < ENV_K.length; i++) {
+      const w = ENV_W[i % ENV_W.length];
+      raw += w * (0.5 + 0.5 * Math.sin(TAU * ENV_K[i] * p + ENV_PH[i % ENV_PH.length]));
+      wsum += w;
+    }
+    raw /= wsum;
+    return ENV_FLOOR + (1 - ENV_FLOOR) * smoothstep(0.34, 0.66, raw);
   }
+
+  const CARRIERS = get('assets.voice_waveform.behavior.carrier_waves', [
+    { spatial_cycles: 2.2, temporal_frequency_hz: 0.7, relative_amplitude: 1.0, direction: 'leftward' },
+    { spatial_cycles: 4.7, temporal_frequency_hz: 0.4, relative_amplitude: 0.42, direction: 'rightward' },
+    { spatial_cycles: 8.3, temporal_frequency_hz: 0.9, relative_amplitude: 0.2, direction: 'leftward' }
+  ]).map((c, i) => ({
+    s: c.spatial_cycles,
+    k: Math.max(1, Math.round(c.temporal_frequency_hz * 10)),
+    a: 34 * c.relative_amplitude,
+    dir: c.direction === 'rightward' ? 1 : -1,
+    ph: [0.5, 2.0, 4.2, 1.1][i % 4]
+  }));
 
   function waveY(u, t, env) {
     const p = t / DURATION;
     const hann = 0.5 - 0.5 * Math.cos(TAU * u);
-    return env * hann * (
-      34 * Math.sin(TAU * (2.2 * u - 7 * p) + 0.5) +
-      14 * Math.sin(TAU * (4.7 * u + 4 * p) + 2.0) +
-      7  * Math.sin(TAU * (8.3 * u - 9 * p) + 4.2)
-    );
+    let y = 0;
+    for (const c of CARRIERS) y += c.a * Math.sin(TAU * (c.s * u + c.dir * c.k * p) + c.ph);
+    return env * hann * y;
   }
 
-  function tracePath(g, t, env, yScale) {
+  function tracePath(g, t, env, yScale, yOff) {
     g.beginPath();
     for (let i = 0; i <= WAVE.samples; i++) {
       const u = i / WAVE.samples;
       const x = WAVE.cx - WAVE.halfW + u * WAVE.halfW * 2;
-      const y = WAVE.baseY + waveY(u, t, env) * yScale;
+      const y = WAVE.baseY + (yOff || 0) + waveY(u, t, env) * yScale;
       if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
     }
   }
 
-  function drawWaveform(g, t) {
-    const env = voiceEnvelope(t);
-    const app = SPEC.foreground.voice_waveform.appearance;
+  function waveGradient(g) {
+    const grad = g.createLinearGradient(WAVE.cx - WAVE.halfW, 0, WAVE.cx + WAVE.halfW, 0);
+    grad.addColorStop(0, WAVE_EDGE);
+    grad.addColorStop(0.3, WAVE_CORE);
+    grad.addColorStop(0.7, WAVE_CORE);
+    grad.addColorStop(1, WAVE_EDGE);
+    return grad;
+  }
 
-    // Soft light pool the wave casts on the water.
+  // Le segment qui passe DERRIÈRE le micro : atténué, dessiné avant lui.
+  function drawWaveBehind(g, t, env) {
+    g.save();
+    g.beginPath();
+    g.rect(MIC.cx - 130, 0, 260, H);
+    g.clip();
+    g.globalAlpha = 0.22;
+    g.strokeStyle = waveGradient(g);
+    g.lineCap = 'round';
+    g.lineWidth = 2.5;
+    tracePath(g, t, env, 0.9, -7);
+    g.stroke();
+    g.restore();
+  }
+
+  function drawWaveform(g, t, env) {
+    // Halo que l'onde projette sur l'eau (light spill de la spec).
     g.save();
     g.translate(WAVE.cx, WAVE.baseY + 26);
     g.scale(1, 0.14);
     const pool = g.createRadialGradient(0, 0, 0, 0, 0, 430);
-    pool.addColorStop(0, `rgba(63,216,255,${(0.11 * env).toFixed(3)})`);
+    pool.addColorStop(0, `rgba(63,216,255,${(SPILL_MAX * 1.3 * env).toFixed(3)})`);
     pool.addColorStop(1, 'rgba(63,216,255,0)');
     g.fillStyle = pool;
     g.fillRect(-440, -440, 880, 880);
     g.restore();
 
-    // Stroke fades to fully transparent at both extremities so neither end
-    // of the wave terminates in a hard cut.
-    const grad = g.createLinearGradient(WAVE.cx - WAVE.halfW, 0, WAVE.cx + WAVE.halfW, 0);
-    grad.addColorStop(0, 'rgba(47,143,255,0)');
-    grad.addColorStop(0.08, app.outer_color);
-    grad.addColorStop(0.3, app.core_color);
-    grad.addColorStop(0.7, app.core_color);
-    grad.addColorStop(0.92, app.outer_color);
-    grad.addColorStop(1, 'rgba(47,143,255,0)');
-
+    const grad = waveGradient(g);
     g.save();
     g.lineCap = 'round';
     g.lineJoin = 'round';
 
-    // Faint mirrored trace beneath the main wave.
-    g.globalAlpha = 0.20;
+    g.globalAlpha = MIRROR_OPACITY;
     g.strokeStyle = grad;
     g.lineWidth = 2;
-    tracePath(g, t, env, -0.35);
+    tracePath(g, t, env, -0.35, 0);
     g.stroke();
 
-    // Wide outer glow pass.
     g.globalAlpha = 0.16;
-    g.shadowColor = app.glow.color;
+    g.shadowColor = WAVE_GLOW;
     g.shadowBlur = 26;
     g.lineWidth = 8;
-    tracePath(g, t, env, 1);
+    tracePath(g, t, env, 1, 0);
     g.stroke();
 
-    // Bright core pass.
     g.globalAlpha = 0.95;
     g.shadowBlur = 14;
     g.lineWidth = 3;
@@ -684,9 +1335,9 @@
     g.restore();
   }
 
-  // ------------------------------------------------------------- camera
+  // --------------------------------------------------------------- caméra
   function zoom(t) {
-    return 1 + 0.005 * (1 - Math.cos(TAU * t / DURATION));   // 1.000 → 1.010 → 1.000
+    return 1 + DOLLY_HALF * (1 - Math.cos(TAU * t / DURATION));   // 1.000 → 1.010 → 1.000
   }
 
   function withCam(g, z, parallaxFactor, draw) {
@@ -699,80 +1350,92 @@
     g.restore();
   }
 
-  // -------------------------------------------------------------- frame
+  // ---------------------------------------------------------------- frame
+  const DRIFT_A = 0.0002 * W;
+
   function render(t) {
     ctx.setTransform(S, 0, 0, S, 0, 0);
-    const z = zoom(t);
-    const px = SPEC.camera.movement.parallax;
+    const p = t / DURATION;
 
-    withCam(ctx, z, px.background_layers_factor, () => {
+    // Respiration optique + micro-dérive stabilisée, sous un léger surcadrage
+    // constant (1.004) pour que les bords restent toujours couverts.
+    const breath = BREATHING ? 1 + 0.0015 * Math.sin(TAU * p) : 1;
+    const dx = MICRO_DRIFT ? DRIFT_A * (Math.sin(TAU * 2 * p + 0.7) + 0.6 * Math.sin(TAU * 3 * p + 1.4)) : 0;
+    const dy = MICRO_DRIFT ? DRIFT_A * (Math.sin(TAU * 2 * p + 3.9) + 0.6 * Math.sin(TAU * 3 * p + 5.1)) : 0;
+    ctx.translate(W / 2 + dx, H / 2 + dy);
+    ctx.scale(1.004 * breath, 1.004 * breath);
+    ctx.translate(-W / 2, -H / 2);
+
+    const z = zoom(t);
+    const cloudOff = 0.004 * W * Math.sin(TAU * p + 1.3);
+
+    withCam(ctx, z, PARALLAX.background_layers_factor, () => {
       ctx.drawImage(skyC, 0, 0, W, H);
+      ctx.drawImage(cloudC, cloudOff, 0, W, H);
       drawSun(ctx, t);
       ctx.drawImage(farC, 0, 0, W, H);
       ctx.drawImage(midC, 0, 0, W, H);
-      drawMist(ctx, t);
+      drawFog(ctx, t);
       drawSunHaze(ctx, t);
       ctx.drawImage(nearC, 0, 0, W, H);
       drawWater(ctx, t);
     });
 
-    withCam(ctx, z, px.midground_factor, () => {
+    withCam(ctx, z, PARALLAX.midground_factor, () => {
       drawTrees(ctx, t);
+      drawMotes(ctx, t);
     });
 
-    withCam(ctx, z, px.foreground_factor, () => {
-      drawMicLayer(ctx);
-      drawWaveform(ctx, t);
+    const env = voiceEnvelope(t);
+    withCam(ctx, z, PARALLAX.foreground_factor, () => {
+      if (MIC_REFL.enabled) {
+        ctx.globalAlpha = MIC_REFL.opacity;
+        ctx.drawImage(micReflC, 0, 0, W, H);
+        ctx.globalAlpha = 1;
+      }
+      drawWaveBehind(ctx, t, env);
+      ctx.drawImage(micC, 0, 0, W, H);
+      drawWaveform(ctx, t, env);
     });
 
+    // La vignette est un effet d'optique : fixe par rapport au cadre.
+    ctx.setTransform(S, 0, 0, S, 0, 0);
     ctx.drawImage(vigC, 0, 0, W, H);
   }
 
-  // --------------------------------------------------------------- loop
-  const motionQuery = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
-  let frozenTime = motionQuery && motionQuery.matches ? 2.5 : null;
-  let t0 = performance.now();
-  let rafId = 0;
-
-  // A single rAF chain: cancelling before every request means repeated
-  // setTime()/play() calls can never stack duplicate render loops.
-  function schedule() {
-    cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(tick);
-  }
+  // ---------------------------------------------------------------- boucle
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let frozenTime = reduceMotion ? 2.5 : null;
+  const t0 = performance.now();
+  let rafPending = false;
 
   function tick(now) {
-    const t = frozenTime !== null ? frozenTime : ((now - t0) / 1000) % DURATION;
+    rafPending = false;
+    const t = frozenTime !== null ? frozenTime % DURATION : ((now - t0) / 1000) % DURATION;
     render(t);
-    if (frozenTime === null) schedule();
+    if (frozenTime === null) {
+      rafPending = true;
+      requestAnimationFrame(tick);
+    }
   }
-  schedule();
+  rafPending = true;
+  requestAnimationFrame(tick);
 
-  // Headless-testing hook (not a UI element): freeze or release the clock.
+  // Hook de test headless (pas un élément d'UI) : fige ou relâche l'horloge.
   window.__ANIM = {
     duration: DURATION,
     spec: SPEC,
     setTime(t) {
-      const v = Number(t);
-      if (!Number.isFinite(v)) throw new RangeError('setTime expects a finite time in seconds');
-      frozenTime = ((v % DURATION) + DURATION) % DURATION;
-      schedule();
+      frozenTime = t;
+      if (!rafPending) { rafPending = true; requestAnimationFrame(tick); }
     },
     play() {
       if (frozenTime !== null) {
-        t0 = performance.now() - frozenTime * 1000;   // resume from the frozen instant
         frozenTime = null;
-        schedule();
+        if (!rafPending) { rafPending = true; requestAnimationFrame(tick); }
       }
     }
   };
-
-  if (motionQuery && motionQuery.addEventListener) {
-    motionQuery.addEventListener('change', e => {
-      if (e.matches) { frozenTime = 2.5; schedule(); }
-      else window.__ANIM.play();
-    });
-  }
 })();
 </script>
 </body>

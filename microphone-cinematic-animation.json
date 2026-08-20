@@ -2,7 +2,7 @@
   "project": {
     "name": "Alpine Dawn — AI Voice Hero Background",
     "slug": "microphone-cinematic-animation",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "format": "cinematic-scene-json",
     "description": "Photorealistic cinematic video background that reads as real camera footage from a luxury technology commercial: a genuine alpine lake at first light, thin fog drifting over mirror-calm water, layered mountains in natural haze, and a real-world premium studio microphone anchoring the foreground while an extremely subtle cyan-blue voice waveform breathes around it.",
     "usage": "application_hero_background",
@@ -96,7 +96,11 @@
       "surface_normalized_y_range": [0.611, 1.0],
       "state": "perfectly calm",
       "ripple_amplitude_cm": [0.5, 2],
-      "reflections": "physically realistic mirror of mountains, sky, sun and trees, carrying tiny natural distortions from extremely subtle water movement — never a perfect flip"
+      "reflections": {
+        "character": "physically realistic mirror of mountains, sky, sun and trees, carrying tiny natural distortions from extremely subtle water movement — never a perfect flip",
+        "opacity": 0.35,
+        "vertical_squash": 0.6
+      }
     },
     "wind": {
       "speed_mps": 1.0,
@@ -349,6 +353,12 @@
     "practical_light": {
       "source": "voice_waveform emissive",
       "effect": "faint cyan spill onto the microphone body and water, modulated by the speech envelope"
+    },
+    "rim_light": {
+      "target": "hero_microphone",
+      "color": "rgba(240, 196, 137, 0.35)",
+      "motivation": "physically motivated by the low sun behind camera-right",
+      "coverage": "thin warm edge along the capsule and body's sun-facing side"
     },
     "global_illumination": "physically realistic multi-bounce — sky bounce into shadows, warm ground bounce near sunlit rock",
     "exposure": {
